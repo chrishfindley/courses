@@ -1,0 +1,1571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Books · Accounting I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F5EE;
+  --card:#FFFFFF;
+  --rule:#DBDECB;
+  --ink:#182219;
+  --ink2:#4A5548;
+  --green:#1B7A4A;
+  --green-deep:#0C3B24;
+  --green-soft:#E4F0E7;
+  --red:#B23A2E;
+  --red-soft:#F7E7E4;
+  --gold:#C79A2A;
+  --disp:"Bricolage Grotesque",sans-serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font-family:var(--body);cursor:pointer}
+input,select{font-family:var(--body)}
+a{color:var(--green-deep)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--ink)}
+.topin{max-width:760px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:.02em;cursor:pointer;user-select:none}
+.brand small{display:block;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.14em;color:var(--green)}
+.top nav{display:flex;gap:6px;margin-left:auto}
+.navbtn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.navbtn.on{background:var(--ink);color:var(--paper)}
+.bizpick{display:flex;align-items:center;gap:8px;width:100%;padding-top:2px}
+.bizpick label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--ink2)}
+.bizpick select{flex:1;max-width:340px;border:1.5px solid var(--ink);border-radius:8px;padding:6px 8px;background:var(--card);font-weight:600;font-size:14px;color:var(--ink)}
+
+/* home hero */
+.hero{padding:44px 0 26px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.18em;color:var(--green);margin-bottom:10px}
+.hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(42px,9vw,72px);line-height:.95;letter-spacing:-.01em}
+.hero p{margin-top:14px;max-width:520px;color:var(--ink2);font-size:17px}
+.hero .cta{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* ledger index of days */
+.unitlabel{display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 10px;flex-wrap:wrap;gap:6px}
+.unitlabel h2{font-family:var(--disp);font-weight:800;font-size:22px}
+.unitlabel span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink2)}
+.ledger{border-top:2px solid var(--ink)}
+.lrow{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--rule);cursor:pointer;background:transparent;transition:background .12s}
+.lrow:hover{background:#EDEFE3}
+.lrow .dnum{font-family:var(--mono);font-weight:600;font-size:12px;color:var(--ink2);letter-spacing:.06em}
+.lrow .dtitle{font-weight:700;font-size:16px}
+.lrow .dsub{font-family:var(--mono);font-size:10.5px;color:var(--ink2);letter-spacing:.04em;margin-top:2px}
+.lrow .dstat{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+.done .dstat{color:var(--green);font-weight:600}
+.lockedrow{opacity:.45;cursor:default}
+
+/* generic card + lesson layout */
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:22px;margin:16px 0;box-shadow:3px 3px 0 rgba(24,34,25,.12)}
+.card h3{font-family:var(--disp);font-weight:800;font-size:20px;margin-bottom:10px}
+.card p{margin:8px 0;font-size:16.5px}
+.card p.big{font-size:19px;font-weight:600}
+.klist{margin:10px 0 4px 0;padding-left:0;list-style:none}
+.klist li{padding:7px 0 7px 26px;position:relative;font-size:16.5px}
+.klist li::before{content:"";position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:2px;background:var(--green)}
+.term{background:var(--green-soft);border-radius:4px;padding:1px 6px;font-weight:700}
+.money{font-family:var(--mono);font-weight:600;white-space:nowrap}
+
+/* lesson header + progress */
+.lhead{padding:26px 0 8px}
+.lhead .eyebrow{margin-bottom:6px}
+.lhead h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,6vw,44px);line-height:1}
+.teks{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1px solid var(--ink);border-radius:999px;padding:4px 10px;color:var(--ink2)}
+.steps{display:flex;gap:4px;margin:18px 0 4px;flex-wrap:wrap}
+.stepdot{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding:5px 10px;border-radius:999px;border:1.5px solid var(--rule);color:var(--ink2);background:var(--card)}
+.stepdot.now{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.stepdot.past{border-color:var(--green);color:var(--green)}
+.secbar{display:flex;align-items:center;gap:10px;margin:26px 0 4px}
+.secbar h2{font-family:var(--disp);font-weight:800;font-size:24px}
+.secbar .mins{font-family:var(--mono);font-size:11px;color:var(--ink2);letter-spacing:.1em}
+
+/* buttons */
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-weight:700;font-size:15px;padding:11px 20px;border-radius:10px;transition:transform .08s}
+.btn:active{transform:translateY(1px)}
+.btn.green{background:var(--green);border-color:var(--green)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:7px 14px;font-size:13.5px}
+.btn:disabled{opacity:.4;cursor:default}
+.btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+
+/* question blocks */
+.q{margin:14px 0 4px;font-weight:700;font-size:16.5px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{border:1.5px solid var(--ink);border-radius:10px;background:var(--card);padding:11px 14px;text-align:left;font-size:15.5px;font-weight:600;color:var(--ink);transition:background .1s}
+.opt:hover{background:#F0F2E8}
+.opt.right{background:var(--green-soft);border-color:var(--green);color:var(--green-deep)}
+.opt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.opt:disabled{cursor:default}
+.fb{margin-top:10px;font-weight:600;font-size:14.5px}
+.fb.ok{color:var(--green-deep)}
+.fb.no{color:var(--red)}
+.hint{margin-top:8px;font-size:14px;color:var(--ink2);border-left:3px solid var(--gold);padding-left:10px}
+
+/* sort game */
+.chipbank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{border:1.5px solid var(--ink);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14.5px;color:var(--ink)}
+.chip.gone{display:none}
+.buckets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.buckets{grid-template-columns:1fr}}
+.bucket{border:2px dashed var(--ink2);border-radius:12px;min-height:86px;padding:10px}
+.bucket h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2);margin-bottom:6px}
+.bucket .placed{display:flex;flex-wrap:wrap;gap:6px}
+.placed span{font-size:13px;font-weight:600;border-radius:999px;padding:4px 10px}
+.placed span.ok{background:var(--green-soft);color:var(--green-deep)}
+.placed span.no{background:var(--red-soft);color:var(--red);text-decoration:line-through}
+.sortnow{border:2px solid var(--ink);border-radius:12px;padding:16px;text-align:center;margin:12px 0;background:#FBFBF6}
+.sortnow .item{font-family:var(--disp);font-weight:800;font-size:22px}
+.sortnow .val{font-family:var(--mono);font-weight:600;color:var(--ink2);margin-top:2px}
+.bucketbtns{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.score{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink2);margin-top:10px}
+.streak{color:var(--gold);font-weight:600}
+
+/* numeric input */
+.numrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.numrow .dollar{font-family:var(--mono);font-weight:600;font-size:18px}
+.numin{border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-weight:600;font-size:17px;width:150px;background:var(--card);color:var(--ink)}
+.numin:focus{outline:3px solid var(--green-soft)}
+
+/* transaction picker */
+.txcard{border:1.5px solid var(--ink);border-radius:12px;padding:16px;margin:14px 0;background:#FBFBF6}
+.txcard .txd{font-weight:700;font-size:16px}
+.txcard .txm{font-family:var(--mono);color:var(--green-deep);font-weight:600}
+.pickrow{margin-top:12px}
+.pickrow h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;margin-bottom:6px;color:var(--ink2)}
+.acctchips{display:flex;flex-wrap:wrap;gap:7px}
+.acct{border:1.5px solid var(--ink2);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.acct.selup{background:var(--green);border-color:var(--green);color:#fff}
+.acct.seldn{background:var(--red);border-color:var(--red);color:#fff}
+.acct.none{border-style:dashed}
+
+/* ledger record box */
+.record{position:relative;border:1.5px solid var(--green-deep);border-radius:12px;margin:18px 0;padding:16px 16px 16px 42px;background:
+  repeating-linear-gradient(180deg,#FDFDF8 0px,#FDFDF8 27px,#E7ECDC 28px);overflow:hidden}
+.record::before{content:"";position:absolute;top:0;bottom:0;left:28px;width:2px;background:var(--red)}
+.record h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--green-deep);margin-bottom:6px}
+.record .rline{font-family:var(--mono);font-weight:600;font-size:14.5px;line-height:28px;color:var(--ink)}
+
+/* stamp */
+.stampwrap{position:relative;min-height:120px;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.stamp{font-family:var(--disp);font-weight:800;letter-spacing:.08em;font-size:30px;color:var(--green);border:4px solid var(--green);border-radius:10px;padding:10px 22px;transform:rotate(-7deg);opacity:0}
+.stamp.red{color:var(--red);border-color:var(--red)}
+.stamp.show{animation:slam .45s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes slam{0%{opacity:0;transform:rotate(-7deg) scale(2.4)}70%{opacity:1;transform:rotate(-7deg) scale(.94)}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.stamp.show{animation:none;opacity:1}}
+
+/* business cards */
+.picklist{margin-top:14px}
+.pickrow2{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
+.pickrow2 .mchip{margin-bottom:0}
+.pname{font-family:var(--disp);font-weight:800;font-size:17px}
+.pdoes{font-size:13.5px;color:var(--ink2);margin-top:2px}
+.pprice{font-family:var(--mono);font-size:12.5px;color:var(--green-deep);font-weight:600;margin-top:4px}
+.opsblock{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px}
+.olabel{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--green);margin:10px 0 4px}
+.opsblock p{font-size:14px;line-height:1.5;margin-bottom:5px}
+.pickcard .story{margin-top:10px}
+.pickcard .story p{font-size:14px;line-height:1.55;color:var(--ink2);margin-bottom:7px}
+.bizgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+@media(max-width:600px){.bizgrid{grid-template-columns:1fr}}
+.bizcard{border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:16px;position:relative;box-shadow:3px 3px 0 rgba(24,34,25,.12)}
+.bizcard.taken{outline:3px solid var(--green)}
+.mono{font-family:var(--mono)}
+.mchip{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:17px;color:#fff;margin-bottom:10px}
+.bizcard h3{font-family:var(--disp);font-weight:800;font-size:18px}
+.bizcard .who{font-size:13.5px;color:var(--ink2);font-weight:600;margin-top:2px}
+.bizcard .tag{font-size:14px;margin-top:8px}
+.bizcard .story{margin-top:12px;border-top:1px solid var(--rule);padding-top:10px}
+.bizcard .story p{font-size:13.5px;line-height:1.5;color:var(--ink2);margin-bottom:6px}
+.bizcard .price{font-family:var(--mono);font-size:12.5px;margin-top:8px;color:var(--green-deep);font-weight:600}
+.grouptag{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:var(--green);color:#fff;border-radius:999px;padding:4px 10px;font-weight:600}
+.drawpanel{border:2px solid var(--ink);border-radius:14px;padding:20px;margin-top:20px;background:var(--card);text-align:center}
+.drawpanel h3{font-family:var(--disp);font-weight:800;font-size:22px}
+.hl{outline:3px solid var(--gold)}
+
+/* exit / results */
+.result{border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);padding:26px;text-align:center;margin:18px 0}
+.result .bignum{font-family:var(--disp);font-weight:800;font-size:56px;line-height:1}
+.result .sub{font-family:var(--mono);font-size:12px;letter-spacing:.12em;margin-top:8px;color:#C9D2C6}
+.result .bizline{margin-top:10px;font-weight:600}
+
+.footer{border-top:2px solid var(--ink);margin-top:40px;padding:18px 0;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.footer button{background:none;border:none;color:var(--ink2);font-family:var(--mono);font-size:11px;text-decoration:underline;padding:0}
+.tnote{font-size:14.5px;color:var(--ink2);margin:8px 0}
+.warnpick{border:2px solid var(--gold);background:#FBF4DF;border-radius:12px;padding:14px 16px;margin:14px 0;font-weight:600}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.resultform{margin-top:16px;text-align:left}
+.resultform label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#C9D2C6;display:block;margin-bottom:4px}
+.namein{width:100%;max-width:320px;border:2px solid var(--paper);border-radius:8px;padding:9px 11px;font-weight:600;font-size:15px;background:#fff;color:var(--ink)}
+.copyta{width:100%;margin-top:12px;border:1.5px solid #5A665B;border-radius:8px;background:#0F1710;color:#D9E2D6;font-family:var(--mono);font-size:12px;line-height:1.5;padding:10px;resize:none}
+.fslink{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1.5px solid var(--ink);border-radius:999px;padding:5px 10px;background:transparent;color:var(--ink);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <div class="brand" onclick="go('#/')">THE BOOKS<small>ACCOUNTING I</small></div>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<script>
+/* ================= COURSE ================= */
+var COURSE={
+key:"tb3_",
+brand:"THE BOOKS",
+heroEyebrow:"ACCOUNTING I",
+heroTitle:"THE BOOKS",
+heroTag:"Learn how accounting works, then run the books for a business of your own.",
+startLabel:"Start Day 1",
+browseLabel:"",
+unitTitle:"Unit 1 &middot; The Accounting Equation",
+unitMeta:"6 DAYS",
+nextUnit:{num:"DAY 7+",t:"Unit 2 &middot; T Accounts",sub:"OPENS AFTER BOOKS CHECK 1"},
+dayEyebrow:"UNIT 1",
+pickLabel:"YOUR BUSINESS",
+pickWarn:"Choose a business earlier in this lesson to continue.",
+entWord:"Business",
+entitiesEyebrow:"FIVE BUSINESSES",
+entitiesTitle:"The Businesses",
+drawCopy:"Review each business and choose one to run.",
+resultNote:"Copy the block and paste it into today's Canvas assignment.",
+footer:"ALIGNED TO 19 TAC &sect;130.187, ACCOUNTING I",
+mapTitle:"Unit 1 map",
+teacher:[
+{h:"Day structure",ps:[
+"Day 1 teaches the basics first, then students choose one of five businesses inside the lesson. Everything after the choice uses that business's own numbers.",
+"Days 2 through 6 open with that business already selected and build on its operations."]},
+{h:"The five businesses",ps:[
+"Sunrise Lawn Co., Golden Hour Photo, Two Rivers Pet Care, Bounce City Party Rentals, and Fuel Coffee Cart.",
+"Each has different revenue, expenses, equipment, customers, staffing decisions, and debts, so no two groups work the same numbers.",
+"Multiple students may choose the same business."]},
+{h:"Canvas",ps:[
+"Create one text-entry assignment per day. Students enter their name on the result screen, tap Copy for Canvas, and paste the block in.",
+"The block carries the day, business, score, date, and a verification code tied to those details.",
+"Nothing saves to a server. The Canvas paste is the record."]}]
+};
+
+/* ================= DATA: BUSINESSES ================= */
+var BIZ=[
+{id:"lawn",name:"Sunrise Lawn Co.",owner:"Marcus Reed",hue:145,
+ does:"Mowing, edging, and yard cleanup for homes in one neighborhood.",
+ price:"$45 per yard",unit:45,unitWord:"yard",jobs:60,
+ story:[
+  "Marcus Reed started mowing four yards on his street with his father's push mower.",
+  "Three years later he services 60 yards a month across two neighborhoods and owns a trailer, two mowers, and a trimmer.",
+  "He borrowed $700 from a relative to buy his second mower and still owes most of it.",
+  "The business has been profitable every month. It has never kept written records."],
+ customers:"About 40 regular households, most on a every-other-week schedule.",
+ ops:[
+  "Marcus works alone, six days a week during the growing season.",
+  "Customers pay cash or by app at the time of service.",
+  "Ace Supply lets him take fuel, trimmer line, and bags on account and pay at the end of each month."],
+ rev:2700,
+ exp:[{n:"Fuel",v:240},{n:"Blades, line, and bags",v:110},{n:"Insurance",v:150},{n:"Phone",v:50}],
+ hire:{who:"a second crew member",cost:15,unitc:"per hour"},
+ buy:{what:"a commercial zero-turn mower",cost:3800},
+ invest:3000,
+ snapA:[{n:"Cash in the business account",v:2300},{n:"Push mower",v:1200},{n:"Trailer",v:900},{n:"Trimmer and edger",v:450},{n:"Fuel and supplies on hand",v:150}],
+ snapL:[{n:"Owed to Ace Supply",v:300},{n:"Loan from a relative",v:700}],
+ snapX:["Marcus's personal computer at home","A customer's backyard"],
+ tx:{equipD:"Bought a used trailer",equipV:900,suppD:"Bought trimmer line and bags on account from Ace Supply",suppV:180,vendor:"Ace Supply",payV:100,revD:"Mowed 8 yards, paid in cash",revV:360,expD:"Paid for fuel",expV:60,drawV:200},
+ sit:{assets:"Marcus owns his equipment and keeps it in a garage. The lawns he services belong to his customers.",
+      liab:"Ace Supply bills him monthly. The loan from his relative is a separate, longer-term debt.",
+      eq:"A bank is reviewing Sunrise Lawn Co. for equipment financing and has asked for its numbers.",
+      tx:"This is the week Marcus opened a business account and began recording every transaction."}},
+
+{id:"photo",name:"Golden Hour Photo",owner:"Jade Miller",hue:35,
+ does:"Senior portrait and family photography sessions.",
+ price:"$150 per session",unit:150,unitWord:"session",jobs:20,
+ story:[
+  "Jade Miller charged $40 for her first paid session because she did not know what the work was worth.",
+  "She now charges $150 and books about 20 sessions a month, with most of them falling in the fall.",
+  "Her camera and lenses cost more than her car. She financed an editing laptop and still owes $1,000 on it.",
+  "Prints, travel, and software all come out of one account, so she cannot tell which months are profitable."],
+ customers:"High school seniors and families, booked mostly by referral and social media.",
+ ops:[
+  "Jade shoots on location at parks and school campuses. She has no studio.",
+  "Clients pay half at booking and half when the edited photos are delivered.",
+  "Pixel Print Co. produces her print orders and bills her monthly."],
+ rev:3000,
+ exp:[{n:"Prints and albums",v:320},{n:"Editing software",v:60},{n:"Travel to shoots",v:120},{n:"Insurance",v:100}],
+ hire:{who:"a second shooter for large sessions",cost:200,unitc:"per session"},
+ buy:{what:"a second camera body",cost:2200},
+ invest:4000,
+ snapA:[{n:"Cash in the business account",v:2100},{n:"Camera body",v:1800},{n:"Lenses",v:1200},{n:"Lighting kit",v:500},{n:"Memory cards and props",v:150},{n:"Editing laptop",v:1250}],
+ snapL:[{n:"Owed on the editing laptop",v:1000},{n:"Owed to Pixel Print Co.",v:500}],
+ snapX:["Jade's personal vehicle","The park where she photographs clients"],
+ tx:{equipD:"Bought a lighting kit",equipV:500,suppD:"Ordered prints on account from Pixel Print Co.",suppV:220,vendor:"Pixel Print Co.",payV:120,revD:"Completed 3 senior sessions, paid in cash",revV:450,expD:"Paid for editing software",expV:30,drawV:250},
+ sit:{assets:"Jade owns her cameras, lenses, lighting, and laptop. The locations she photographs in are public or belong to clients.",
+      liab:"The laptop is financed over two years. Pixel Print Co. bills her monthly for print orders.",
+      eq:"Jade is considering buying a retiring photographer's client list and needs to know what her business is worth.",
+      tx:"This is the week Jade separated her business account from her personal account."}},
+
+{id:"pets",name:"Two Rivers Pet Care",owner:"Sam Ortiz",hue:175,
+ does:"Dog walking and pet sitting while owners are away.",
+ price:"$20 per walk",unit:20,unitWord:"walk",jobs:120,
+ story:[
+  "Sam Ortiz began walking two neighbors' dogs at no charge while their owner recovered from surgery.",
+  "Within a year the business covered most of the east side of town, with about 120 walks a month.",
+  "The only significant equipment is leashes, crates, and an electric bike bought on monthly payments.",
+  "Sam has the lowest costs of these five businesses and keeps the least documentation."],
+ customers:"Fourteen regular households plus occasional overnight pet sitting jobs.",
+ ops:[
+  "Sam works a fixed route on weekdays and takes sitting jobs on weekends.",
+  "Most clients pay weekly by app. A few still pay in cash.",
+  "Pet Depot carries a small account for treats and waste bags."],
+ rev:2400,
+ exp:[{n:"Treats and waste bags",v:95},{n:"Bike upkeep",v:60},{n:"Insurance",v:85},{n:"Phone",v:60}],
+ hire:{who:"a weekend walker",cost:12,unitc:"per walk"},
+ buy:{what:"a second electric bike",cost:1100},
+ invest:1200,
+ snapA:[{n:"Cash in the business account",v:1000},{n:"Leashes, crates, and gear",v:400},{n:"Treats and supplies on hand",v:100},{n:"Electric bike",v:1000}],
+ snapL:[{n:"Owed on the electric bike",v:400},{n:"Owed to Pet Depot",v:100}],
+ snapX:["Sam's own cat","The dogs Sam walks"],
+ tx:{equipD:"Bought an electric bike for the route",equipV:400,suppD:"Bought treats and waste bags on account from Pet Depot",suppV:90,vendor:"Pet Depot",payV:40,revD:"Completed 14 walks, paid in cash",revV:280,expD:"Paid for a bike repair",expV:30,drawV:100},
+ sit:{assets:"Sam owns the leashes, crates, and the electric bike. The dogs belong to the customers.",
+      liab:"The bike is on monthly payments. Pet Depot runs a small supply account.",
+      eq:"Sam wants to add a second walker and needs to know whether the business can support the cost.",
+      tx:"This is the week Sam stopped carrying cash in a pocket and opened a business account."}},
+
+{id:"bounce",name:"Bounce City Party Rentals",owner:"Maya Torres",hue:52,
+ does:"Weekend rental, delivery, and setup of bounce houses and party equipment.",
+ price:"$175 per rental",unit:175,unitWord:"rental",jobs:16,
+ story:[
+  "Maya Torres bought one used bounce house at auction for $1,900 and rented it out eleven times that summer.",
+  "She now owns two, plus blowers, stakes, and a hand truck, and books most spring and summer weekends.",
+  "She still owes $1,800 on the newer bounce house, the largest single debt of these five businesses.",
+  "Every rental requires delivery, setup, cleaning, and pickup, so her costs are higher than the price suggests."],
+ customers:"Families booking birthday parties, plus a few church and school events each season.",
+ ops:[
+  "Maya delivers Friday evening and picks up Sunday afternoon, using her own truck.",
+  "Customers pay a deposit at booking and the balance at delivery.",
+  "Party Plus supplies stakes, tarps, and repair kits on account."],
+ rev:2800,
+ exp:[{n:"Truck fuel",v:220},{n:"Cleaning supplies",v:90},{n:"Insurance",v:240},{n:"Storage unit",v:250}],
+ hire:{who:"a setup helper",cost:40,unitc:"per rental"},
+ buy:{what:"a third bounce house",cost:2400},
+ invest:5000,
+ snapA:[{n:"Cash in the business account",v:2400},{n:"Two bounce houses",v:4200},{n:"Blowers",v:500},{n:"Hand truck and straps",v:300},{n:"Cleaning supplies on hand",v:100}],
+ snapL:[{n:"Owed on a bounce house",v:1800},{n:"Owed to Party Plus",v:200}],
+ snapX:["Maya's trampoline at home","A customer's backyard"],
+ tx:{equipD:"Bought a second blower",equipV:250,suppD:"Bought stakes and tarps on account from Party Plus",suppV:175,vendor:"Party Plus",payV:100,revD:"Completed 3 weekend rentals, paid in cash",revV:525,expD:"Filled the truck with fuel",expV:55,drawV:350},
+ sit:{assets:"Maya owns two bounce houses, blowers, and hauling equipment. The yards she sets up in belong to customers.",
+      liab:"The newer bounce house is financed. Party Plus carries an account for stakes and tarps.",
+      eq:"Maya is deciding whether to buy a third bounce house and needs to know where the business stands.",
+      tx:"This is the week Maya set up formal records for the first time."}},
+
+{id:"coffee",name:"Fuel Coffee Cart",owner:"Nia Brooks",hue:15,
+ does:"Espresso and drip coffee sold from a mobile cart at markets and events.",
+ price:"$5 per drink",unit:5,unitWord:"drink",jobs:600,
+ story:[
+  "Nia Brooks worked four years as a barista before buying a used coffee cart at a restaurant auction.",
+  "She sells about 600 drinks a month at a Saturday farmers market and at weekday office parks.",
+  "The cart and espresso machine were financed together, and $2,200 of that loan remains.",
+  "Unlike the other businesses here, she buys inventory before she sells anything, so cash leaves before it arrives."],
+ customers:"Farmers market shoppers on Saturdays and office workers on weekday mornings.",
+ ops:[
+  "Nia works the cart herself and tows it with a leased trailer hitch on her own vehicle.",
+  "Customers pay by card at the point of sale. Card fees are taken out automatically.",
+  "Ridgeline Roasters delivers beans weekly and bills her on account."],
+ rev:3000,
+ exp:[{n:"Beans, milk, and cups",v:900},{n:"Market vendor fee",v:240},{n:"Health permit",v:100},{n:"Propane",v:60}],
+ hire:{who:"a weekend barista",cost:14,unitc:"per hour"},
+ buy:{what:"a second grinder and a larger cart",cost:3400},
+ invest:4500,
+ snapA:[{n:"Cash in the business account",v:1400},{n:"Coffee cart",v:3200},{n:"Espresso machine",v:2400},{n:"Grinder",v:600},{n:"Beans, milk, and cups on hand",v:400}],
+ snapL:[{n:"Owed on the cart loan",v:2200},{n:"Owed to Ridgeline Roasters",v:300}],
+ snapX:["Nia's personal vehicle","The market's parking lot"],
+ tx:{equipD:"Bought a second grinder",equipV:600,suppD:"Ordered beans on account from Ridgeline Roasters",suppV:240,vendor:"Ridgeline Roasters",payV:140,revD:"Sold 96 drinks at the Saturday market, paid by card",revV:480,expD:"Paid the market vendor fee",expV:70,drawV:200},
+ sit:{assets:"Nia owns the cart, the espresso machine, the grinder, and the inventory on hand. The market lot is rented space.",
+      liab:"The cart and machine were financed together. Ridgeline Roasters bills her weekly on account.",
+      eq:"Nia is applying for a small business loan to buy a larger cart and must report her financial position.",
+      tx:"This is the week Nia began recording every transaction instead of tracking sales on a notepad."}}
+];
+
+/* derived numbers */
+function sumv(a){return a.reduce(function(s,x){return s+x.v},0)}
+function AT(b){return sumv(b.snapA)}
+function LT(b){return sumv(b.snapL)}
+function OE(b){return AT(b)-LT(b)}
+function EXP(b){return sumv(b.exp)}
+function PROF(b){return b.rev-EXP(b)}
+function d8cash(b){return b.invest-b.tx.equipV-b.tx.payV}
+function endCash(b){return d8cash(b)+b.tx.revV-b.tx.expV-b.tx.drawV}
+function endOE(b){return b.invest+b.tx.revV-b.tx.expV-b.tx.drawV}
+function endL(b){return b.tx.suppV-b.tx.payV}
+function endA(b){return endCash(b)+b.tx.equipV+b.tx.suppV}
+function jobRev(b,n){return b.unit*n}
+function fm(n){return "$"+n.toLocaleString("en-US")}
+
+/* block constructors */
+function T(h,lines,check){return {t:"teach",h:h,lines:lines,check:check||null}}
+function Q(q,o,a,why){return {q:q,o:o,a:a,why:why||""}}
+function M(title,qs){return {t:"mcq",title:title,qs:qs}}
+function S(title,prompt,buckets,items){return {t:"sort",title:title,prompt:prompt,buckets:buckets,items:items}}
+function N(prompt,ans,why){return {t:"num",prompt:prompt,ans:ans,why:why||""}}
+function TXB(title,txs,note){return {t:"tx",title:title,txs:txs,note:note||""}}
+function R(lines){return {t:"record",lines:lines}}
+function P(txt){return {t:"note",txt:txt}}
+function STAMP(label){return {t:"stamp",label:label}}
+function PICK(){return {t:"pick"}}
+
+function ownerOpts(b){var o=[b.owner];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.owner)});return o}
+function priceOpts(b){var o=[b.price];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.price)});return o}
+function doesOpts(b){var o=[b.does];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.does)});return o}
+function bigAsset(b){var m=b.snapA[1];b.snapA.slice(1).forEach(function(a){if(a.v>m.v)m=a});return m.n}
+
+/* ================= DATA: LESSONS ================= */
+var LESSONS=[
+
+/* ================================= DAY 1 ================================= */
+{n:1,title:"What Accounting Is",teks:"130.187(c)(2)(A)(B), (c)(4)(B)",
+ secs:[
+
+ {name:"Start",mins:2,blocks:[
+   M("Warm-up.",[
+     Q("A business took in $48,000 last year. The owner cannot say where any of it went. What is missing?",
+       ["Enough customers","A record of the money","A business license","A larger service area"],1),
+     Q("Money a business earns from providing its service is called",
+       ["capital","revenue","equity","a deposit"],1)])]},
+
+ {name:"Basics",mins:8,blocks:[
+   T("What accounting is.",[
+     "Accounting is the system a business uses to record, summarize, and report its financial activity.",
+     "Every dollar received and every dollar spent is recorded.",
+     "Those records are summarized into reports that show what the business earned, what it owns, and what it owes."],
+     Q("Accounting is best described as",
+       ["the system used to record, summarize, and report financial activity","the process of filing a business's taxes","the management of a business's bank accounts","the method used to set a business's prices"],0)),
+   T("The purpose of accounting.",[
+     "The purpose of accounting is to provide financial information that people use to make decisions.",
+     "Recording transactions is how accounting works. Providing useful information is why it exists.",
+     "An owner uses that information to decide whether to hire, whether to buy equipment, and whether the business is profitable."],
+     Q("The purpose of accounting is to",
+       ["record every transaction a business makes","satisfy state and federal tax law","provide financial information for making decisions","calculate how much a business is worth"],2)),
+   T("Who uses the information.",[
+     "The owner uses it to run the business.",
+     "A bank uses it to decide whether to approve a loan.",
+     "An investor uses it to decide whether to put money into the business.",
+     "The government uses it to determine the taxes owed on the business's profit."],
+     Q("A bank reviewing a loan application uses a business's financial records to determine",
+       ["how long the business has operated","whether the business can repay what it borrows","how many customers the business has","how much the owner earns personally"],1)),
+   S("Can financial records answer it?","Select the correct column for each question.",["Records answer it","Records do not answer it"],[
+     {t:"Did the business make a profit last month?",b:0},
+     {t:"How much was spent on fuel this year?",b:0},
+     {t:"Which customer still owes money?",b:0},
+     {t:"Will it rain on Saturday?",b:1},
+     {t:"What did the equipment cost?",b:0},
+     {t:"Will this customer recommend the business?",b:1}])]},
+
+ {name:"Separation",mins:6,blocks:[
+   T("The business is separate from the owner.",[
+     "A business and its owner are treated as two separate entities. This is called the business entity concept.",
+     "The business's records include only the business's money.",
+     "The owner's personal spending is recorded separately and does not appear in the business's records."],
+     Q("The business entity concept requires that",
+       ["a business be legally incorporated","the business's finances be recorded separately from the owner's","the owner not work in the business","the business have more than one owner"],1)),
+   T("Why the separation matters.",[
+     "If personal spending is recorded as a business expense, the business appears less profitable than it is.",
+     "If business income is deposited into a personal account without a record, the owner cannot prove that income to a bank or to the government.",
+     "When an owner takes money out of the business for personal use, it is recorded as a withdrawal rather than an expense."],
+     Q("An owner records personal grocery spending as a business expense. On the records, the business will appear",
+       ["more profitable","less profitable than it is","unchanged","larger in total assets"],1)),
+   S("Business or personal?","Select the correct column for each item.",["Business","Personal"],[
+     {t:"Fuel for the work vehicle",b:0},
+     {t:"The owner's movie tickets",b:1},
+     {t:"Equipment purchased for the business",b:0},
+     {t:"Rent on the owner's apartment",b:1},
+     {t:"The business bank account",b:0},
+     {t:"The owner's personal phone bill",b:1}])]},
+
+ {name:"Your Business",mins:6,blocks:[
+   P("You will now choose a business to run. You will keep its records for the rest of this unit."),
+   PICK(),
+   function(b){return T(b.name,[
+     "Owner: "+b.owner+".",
+     "Service: "+b.does,
+     "Price: "+b.price+".",
+     "Customers: "+b.customers])},
+   function(b){return T("How "+b.name+" operates.",b.ops)},
+   function(b){return M("Confirm the details.",[
+     Q("Who owns "+b.name+"?",ownerOpts(b),0),
+     Q("What does "+b.name+" charge?",priceOpts(b),0),
+     Q("What service does "+b.name+" provide?",doesOpts(b),0)])}]},
+
+ {name:"The Numbers",mins:9,blocks:[
+   function(b){return T("Revenue at "+b.name+".",[
+     b.name+" charges "+fm(b.unit)+" per "+b.unitWord+".",
+     "In a typical month it completes "+b.jobs+" "+b.unitWord+"s.",
+     "Revenue is the total amount earned from providing the service, before any costs are subtracted."])},
+   function(b){return N("Monthly revenue at "+b.name+". "+fm(b.unit)+" times "+b.jobs+":",b.rev,
+     fm(b.unit)+" times "+b.jobs+".")},
+   function(b){return T("Expenses at "+b.name+".",[
+     "An expense is a cost of operating the business.",
+     b.exp.map(function(e){return e.n+": "+fm(e.v)}).join(". ")+".",
+     "These are paid every month whether the business is busy or slow."])},
+   function(b){return N("Total monthly expenses at "+b.name+":",EXP(b),
+     b.exp.map(function(e){return fm(e.v)}).join(" + ")+".")},
+   function(b){return N("Profit for the month at "+b.name+". Revenue "+fm(b.rev)+" minus expenses "+fm(EXP(b))+":",PROF(b),
+     fm(b.rev)+" minus "+fm(EXP(b))+".")},
+   function(b){return T("Applying the separation rule at "+b.name+".",[
+     b.owner+" pays for a family dinner using the business card.",
+     "The money left the business, so it must be recorded.",
+     "It is not a cost of operating the business, so it is recorded as a withdrawal by the owner, not as an expense."],
+     Q("If "+b.owner+" recorded that dinner as a business expense instead, reported profit for the month would appear",
+       ["higher than it should","lower than it should","unchanged","impossible to determine"],1))},
+   function(b){return M("Decisions "+b.owner+" is facing.",[
+     Q(b.owner+" is considering hiring "+b.hire.who+" at "+fm(b.hire.cost)+" "+b.hire.unitc+". To decide, "+b.owner+" needs to know",
+       ["how many competitors there are","whether monthly profit can cover the added cost","how long the business has operated","the price of a new vehicle"],1),
+     Q(b.owner+" is also considering buying "+b.buy.what+" for "+fm(b.buy.cost)+". With monthly profit of "+fm(PROF(b))+", that purchase costs",
+       ["less than one month of profit","more than one month of profit"],PROF(b)>=b.buy.cost?0:1)])},
+   function(b){return R([
+     "PROFILE",
+     "Business: "+b.name,
+     "Owner: "+b.owner,
+     "Monthly revenue: "+fm(b.rev),
+     "Monthly expenses: "+fm(EXP(b)),
+     "Monthly profit: "+fm(PROF(b))])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("The purpose of accounting is to",
+       ["record every transaction accurately","provide financial information for making decisions","satisfy tax authorities","determine what a business is worth"],1),
+     Q("A business's records include",
+       ["the owner's total personal wealth","the business's money only","all money the owner controls","business and personal money combined"],1),
+     Q("Revenue minus expenses equals",
+       ["assets","profit","equity","cash on hand"],1),
+     Q("An owner taking cash out of the business for personal use is recorded as",
+       ["an expense","a withdrawal","revenue","a liability"],1)])]}]},
+
+/* ================================= DAY 2 ================================= */
+{n:2,title:"Assets: What a Business Owns",teks:"130.187(c)(4)(B), (c)(13)(A)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("Accounting is",["a method of filing taxes","the system used to record, summarize, and report financial activity","a way to set prices","a banking service"],1),
+     Q("The business entity concept means",["a business must be incorporated","business and owner finances are recorded separately","the owner cannot be an employee","the business needs its own building"],1),
+     Q("Revenue minus expenses equals",["assets","profit","liabilities","equity"],1)])]},
+
+ {name:"Assets",mins:8,blocks:[
+   T("What an asset is.",[
+     "An asset is anything a business owns that has value.",
+     "Cash, equipment, vehicles, and supplies on hand are all assets.",
+     "For an item to be an asset, the business must own it and it must have a measurable dollar value.",
+     "Property belonging to a customer is not an asset of the business, even if the business works there regularly."],
+     Q("Which of these is an asset of a lawn care business?",
+       ["A customer's lawn it services weekly","A trailer the business owns","A verbal agreement with a customer","The owner's reputation"],1)),
+   T("Assets are recorded at cost.",[
+     "An asset is recorded at the amount the business paid for it. This is called the cost principle.",
+     "A trailer purchased for $900 is recorded at $900, regardless of what it might sell for later.",
+     "Cost can be verified with a receipt. Market value changes over time and depends on estimation."],
+     Q("A business buys a camera for $1,800. Similar cameras now sell for $2,500. The camera is recorded at",
+       ["$2,500, the current market value","$1,800, the amount paid","$2,150, the average of the two","the amount the owner can prove it is worth"],1)),
+   T("Current and long-term assets.",[
+     "Current assets are used up or converted to cash within about a year. Cash and supplies are current assets.",
+     "Long-term assets are used for several years. Equipment and vehicles are long-term assets.",
+     "Banks review this classification because current assets are what a business can use to pay bills in the near term."],
+     Q("A trailer expected to be used for five years is classified as",
+       ["a current asset","a long-term asset","an expense","a liability"],1)),
+   S("Asset or not an asset?","Select the correct column for each item.",["Asset","Not an asset"],[
+     {t:"Cash in the business account",b:0},
+     {t:"Equipment the business owns",b:0},
+     {t:"A customer's property",b:1},
+     {t:"The owner's personal savings",b:1},
+     {t:"Supplies on hand",b:0},
+     {t:"A competitor's vehicle",b:1}]),
+   S("Current or long-term?","Select the correct column for each asset.",["Current","Long-term"],[
+     {t:"Cash in the account",b:0},
+     {t:"A work vehicle",b:1},
+     {t:"Supplies on hand",b:0},
+     {t:"A $1,800 camera body",b:1},
+     {t:"Fuel in the tank",b:0},
+     {t:"Shop equipment",b:1}])]},
+
+ {name:"Your Business",mins:9,blocks:[
+   function(b){return T("The assets at "+b.name+".",[
+     b.sit.assets,
+     "Each item below is recorded at what the business paid for it.",
+     b.snapA.map(function(a){return a.n+": "+fm(a.v)}).join(". ")+"."])},
+   function(b){return N("Total assets at "+b.name+":",AT(b),
+     b.snapA.map(function(a){return fm(a.v)}).join(" + ")+".")},
+   function(b){return N("Cash is "+fm(b.snapA[0].v)+" of that total. How much of "+b.name+"'s assets are not cash?",AT(b)-b.snapA[0].v,
+     fm(AT(b))+" minus "+fm(b.snapA[0].v)+".")},
+   function(b){return M("Classify the assets at "+b.name+".",[
+     Q("Which of these is a long-term asset at "+b.name+"?",
+       [bigAsset(b),"Cash in the business account",b.snapX[0],b.snapX[1]],0),
+     Q("Which of these is not an asset of "+b.name+"?",
+       [b.snapX[1],b.snapA[1].n,b.snapA[2].n,b.snapA[0].n],0),
+     Q("If "+b.owner+" paid "+fm(b.snapA[1].v)+" for the "+b.snapA[1].n.toLowerCase()+" and believes it is worth more now, the records show",
+       ["the current estimated value",fm(b.snapA[1].v)+", the amount paid","an average of the two values","nothing until it is sold"],1)])},
+   function(b){return N(b.owner+" buys $500 of equipment using business cash. What are total assets at "+b.name+" after that purchase?",AT(b),
+     "Cash decreases by $500 and equipment increases by $500. Total assets do not change.")},
+   function(b){return T("Recording assets.",[
+     "Businesses record assets using accounting software or a spreadsheet rather than paper ledgers.",
+     "The software calculates totals automatically and does not make arithmetic errors.",
+     "It processes only what a person enters, so incorrect entries produce incorrect reports."])},
+   function(b){return R([
+     "ACCOUNTS",
+     "Assets recorded at cost",
+     "Total assets   "+fm(AT(b))])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("An asset is recorded at",["current market value","the amount the business paid","replacement cost","the owner's estimate"],1),
+     Q("Equipment the business will use for years is",["a current asset","a long-term asset","an expense","a liability"],1),
+     Q("Buying equipment with cash changes total assets by",["increasing them","decreasing them","not at all","the amount of the profit"],2),
+     Q("Accounting software eliminates",["errors in judgment","arithmetic errors","the need for records","the cost principle"],1)])]}]},
+
+/* ================================= DAY 3 ================================= */
+{n:3,title:"Liabilities and Owner's Equity",teks:"130.187(c)(4)(B)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("An asset is",["anything of value the business owns","anything the business uses","anything the owner owns","anything worth over $500"],0),
+     Q("Assets are recorded at",["market value","the amount paid","replacement value","insured value"],1),
+     Q("A vehicle used for five years is",["a current asset","a long-term asset","an expense","supplies"],1)])]},
+
+ {name:"Liabilities",mins:7,blocks:[
+   T("What a liability is.",[
+     "A liability is an amount the business owes to someone else.",
+     "Money owed to a supplier, a bank loan, and an unpaid bill are all liabilities.",
+     "The party a business owes is called a creditor. A creditor has a legal claim against the business's assets until the debt is paid.",
+     "If a business closes, creditors are paid before the owner receives anything."],
+     Q("A creditor is",
+       ["a customer who owes the business money","a party the business owes money to","a part owner of the business","an accountant who reviews the records"],1)),
+   T("Two liability accounts.",[
+     "Accounts Payable is money owed to a supplier for goods or services received now and paid for later. It is usually settled within weeks.",
+     "Notes Payable is a formal loan with a signed agreement. It usually carries interest and is repaid over months or years.",
+     "Liabilities are also classified by time. Current liabilities are due within about a year. Long-term liabilities are due later."],
+     Q("A business receives $800 of supplies today and agrees to pay the supplier in 30 days. This creates",
+       ["notes payable","accounts payable","a long-term liability","an expense only"],1)),
+   S("Liability or not a liability?","Select the correct column for each item.",["Liability","Not a liability"],[
+     {t:"Money owed to a supplier",b:0},
+     {t:"Cash in the business account",b:1},
+     {t:"A bank loan on a vehicle",b:0},
+     {t:"Equipment the business owns outright",b:1},
+     {t:"An unpaid bill from a vendor",b:0},
+     {t:"The owner's personal credit card balance",b:1}]),
+   S("Accounts payable or notes payable?","Select the correct column for each debt.",["Accounts payable","Notes payable"],[
+     {t:"$300 of supplies received, due in 30 days",b:0},
+     {t:"A $6,000 bank loan with a signed agreement",b:1},
+     {t:"A monthly bill from a print shop",b:0},
+     {t:"A three-year equipment loan with interest",b:1}])]},
+
+ {name:"Owner's Equity",mins:7,blocks:[
+   T("What owner's equity is.",[
+     "Owner's equity is the owner's claim on the business's assets after all liabilities are subtracted.",
+     "Total assets minus total liabilities equals owner's equity.",
+     "The account that holds it is called Capital, written as the owner's name followed by the word Capital."],
+     Q("Owner's equity represents",
+       ["the total value of everything the business owns","the owner's claim on assets after liabilities are subtracted","the cash the owner has invested","the profit earned this year"],1)),
+   T("What increases and decreases it.",[
+     "An owner's investment of money into the business increases owner's equity.",
+     "Revenue earned increases owner's equity.",
+     "Expenses decrease owner's equity.",
+     "Withdrawals by the owner decrease owner's equity."],
+     Q("Which of these increases owner's equity?",
+       ["Buying equipment with cash","Earning revenue from a job","Paying a supplier","Taking out a loan"],1)),
+   N("A business owns $9,000 in assets and owes $4,000. Owner's equity:",5000,"9,000 minus 4,000."),
+   N("A business owns $12,500 and owes $12,500. Owner's equity:",0,"Creditors have a claim on all of it."),
+   N("Assets are $31,000 and liabilities are $8,750. Owner's equity:",22250,"31,000 minus 8,750."),
+   M("Practice.",[
+     Q("A business takes out a $5,000 loan and deposits the cash. Owner's equity",
+       ["increases by $5,000","decreases by $5,000","does not change","doubles"],2,
+       "Cash increases by $5,000 and liabilities increase by $5,000."),
+     Q("An owner withdraws $600 cash for personal use. Owner's equity",
+       ["increases by $600","decreases by $600","does not change","becomes a liability"],1),
+     Q("If liabilities are greater than assets, owner's equity is",
+       ["zero","negative","equal to assets","impossible to calculate"],1)])]},
+
+ {name:"Your Business",mins:8,blocks:[
+   function(b){return T("The liabilities at "+b.name+".",[
+     b.sit.liab,
+     b.snapL.map(function(l){return l.n+": "+fm(l.v)}).join(". ")+".",
+     "These creditors are paid before "+b.owner+" receives anything from the business."])},
+   function(b){return N("Total liabilities at "+b.name+":",LT(b),
+     b.snapL.map(function(l){return fm(l.v)}).join(" + ")+".")},
+   function(b){return N("Owner's equity at "+b.name+". Total assets "+fm(AT(b))+" minus total liabilities "+fm(LT(b))+":",OE(b),
+     fm(AT(b))+" minus "+fm(LT(b))+".")},
+   function(b){return M("Review the accounts at "+b.name+".",[
+     Q("The Capital account at "+b.name+" is named",
+       [b.owner+", Capital",b.name+", Capital","Accounts Payable, "+b.owner,"Owner's Cash"],0),
+     Q("Which debt at "+b.name+" functions as accounts payable?",
+       [b.snapL[1].n,b.snapL[0].n,b.snapA[0].n,b.snapX[0]],0),
+     Q("If "+b.name+" closed and sold everything for exactly "+fm(AT(b))+", "+b.owner+" would receive",
+       [fm(AT(b)),fm(OE(b)),fm(LT(b)),"nothing"],1,
+       "Creditors receive "+fm(LT(b))+" first.")])},
+   function(b){return N(b.owner+" pays off "+fm(b.snapL[1].v)+" of debt using business cash. Total liabilities after that payment:",LT(b)-b.snapL[1].v,
+     fm(LT(b))+" minus "+fm(b.snapL[1].v)+".")},
+   function(b){return N("Owner's equity at "+b.name+" after that payment:",OE(b),
+     "Cash decreased by "+fm(b.snapL[1].v)+" and debt decreased by the same amount.")},
+   function(b){return R([
+     "ACCOUNTS",
+     "Total liabilities   "+fm(LT(b)),
+     "Owner's equity   "+fm(OE(b))])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("A creditor is",["someone who owes the business money","someone the business owes money to","a part owner","an auditor"],1),
+     Q("Owner's equity equals",["assets plus liabilities","assets minus liabilities","liabilities minus assets","revenue minus expenses"],1),
+     Q("Supplies received now and paid for in 30 days create",["notes payable","accounts payable","an expense only","owner's equity"],1),
+     Q("Taking out a loan and depositing the cash changes owner's equity by",["the loan amount","nothing","half the loan","the interest only"],1)])]}]},
+
+/* ================================= DAY 4 ================================= */
+{n:4,title:"The Accounting Equation",teks:"130.187(c)(4)(B), (c)(1)(B)(E)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("A liability is",["what a business owns","what a business owes","the owner's investment","cash on hand"],1),
+     Q("Owner's equity equals",["assets plus liabilities","assets minus liabilities","liabilities only","revenue"],1),
+     Q("Accounts payable is",["a signed bank loan","money owed to a supplier on account","cash the business holds","an asset"],1)])]},
+
+ {name:"The Equation",mins:8,blocks:[
+   T("The accounting equation.",[
+     "Assets equal liabilities plus owner's equity.",
+     "Assets are what the business owns. Liabilities are what it owes. Owner's equity is the owner's remaining claim.",
+     "This equation applies to every business, regardless of size."],
+     Q("The accounting equation is",
+       ["Assets = Liabilities + Owner's Equity","Assets + Liabilities = Owner's Equity","Assets = Owner's Equity minus Liabilities","Revenue minus Expenses = Assets"],0)),
+   T("Why the two sides are always equal.",[
+     "Every asset a business holds was funded in one of two ways.",
+     "It was funded by borrowing, which creates a liability, or by the owner's investment and earnings, which create owner's equity.",
+     "Because there is no other source, every asset is claimed by either a creditor or the owner, and the two sides match."],
+     Q("The equation always balances because every asset",
+       ["was purchased with cash","is claimed by either a creditor or the owner","is recorded at cost","was approved by an accountant"],1)),
+   T("Solving for a missing amount.",[
+     "If assets and liabilities are known: owner's equity equals assets minus liabilities.",
+     "If liabilities and owner's equity are known: assets equal liabilities plus owner's equity.",
+     "If assets and owner's equity are known: liabilities equal assets minus owner's equity.",
+     "Example: assets are $18,000 and owner's equity is $13,000. Liabilities equal $5,000."],
+     Q("Assets are $22,000 and owner's equity is $15,000. Liabilities are",["$37,000","$7,000","$15,000","$22,000"],1)),
+   N("Assets $14,000. Owner's equity $9,000. Liabilities:",5000,"14,000 minus 9,000."),
+   N("Liabilities $3,500. Owner's equity $6,500. Assets:",10000,"3,500 plus 6,500."),
+   N("Assets $40,000. Liabilities $12,000. Owner's equity:",28000,"40,000 minus 12,000."),
+   N("Liabilities $12,600. Owner's equity $8,400. Total assets:",21000,"12,600 plus 8,400."),
+   N("Assets $9,400. Liabilities $2,150. Owner's equity:",7250,"9,400 minus 2,150.")]},
+
+ {name:"Errors",mins:6,blocks:[
+   T("When the two sides do not match.",[
+     "The equation balances when the records are correct. If the two sides do not match, there is an error in the records.",
+     "Three causes account for most errors.",
+     "A transaction was never recorded. A number was entered incorrectly. Or a transaction was recorded on only one side."],
+     Q("A set of records does not balance. This indicates",
+       ["the business lost money","an error in the records","the business has too much debt","the owner withdrew too much"],1)),
+   T("Recording only one side.",[
+     "Every transaction affects at least two accounts.",
+     "If a business records supplies received but does not record the amount owed, only one side of the transaction is entered.",
+     "Assets increase, nothing on the other side increases, and the two sides differ by exactly the amount that was missed."],
+     Q("Assets total $10,000 but liabilities plus owner's equity total $9,200. The most likely cause is",
+       ["the business earned $800 in profit","an $800 item was recorded on only one side","the owner withdrew $800","liabilities were overstated by $800"],1)),
+   T("Reviewing the records.",[
+     "The process of checking records for errors and correcting them is called reconciling.",
+     "Businesses reconcile monthly rather than once a year.",
+     "An error found during a monthly review takes minutes to correct. The same error found a year later can take days."]),
+   M("Practice.",[
+     Q("Assets are $15,000, liabilities are $4,000, and owner's equity is $10,000. This indicates",
+       ["the records balance","$1,000 is unaccounted for in the records","the owner owes $1,000","liabilities are understated by $11,000"],1),
+     Q("Which of these would not cause the equation to go out of balance?",
+       ["Omitting a purchase entirely","Recording only one side of a transaction","Entering $450 as $540","Recording a transaction in the wrong month"],3,
+       "A wrong date is still an error, but both sides were recorded."),
+     Q("The best time to find an error is",
+       ["at tax time","during the monthly review","when the bank requests records","when the totals appear unusual"],1)]),
+   N("Assets are $18,600. Liabilities plus owner's equity total $18,150. The difference is:",450,"18,600 minus 18,150.")]},
+
+ {name:"Your Business",mins:8,blocks:[
+   function(b){return T("The equation at "+b.name+".",[
+     b.sit.eq,
+     "Total assets: "+fm(AT(b))+". Total liabilities: "+fm(LT(b))+". Owner's equity: "+fm(OE(b))+"."])},
+   function(b){return N("Liabilities "+fm(LT(b))+" plus owner's equity "+fm(OE(b))+" equals total assets of:",AT(b),
+     "Both sides must be equal.")},
+   function(b){return T("The equation for "+b.name+".",[
+     fm(AT(b))+" = "+fm(LT(b))+" + "+fm(OE(b))+".",
+     "The left side is everything the business owns. The right side shows who has a claim on it, creditors first and "+b.owner+" second."])},
+   function(b){return N(b.owner+" borrows $2,000 from a bank and deposits it. Total assets after the loan:",AT(b)+2000,
+     fm(AT(b))+" plus $2,000 in cash.")},
+   function(b){return N("Total liabilities after the loan:",LT(b)+2000,fm(LT(b))+" plus the $2,000 note.")},
+   function(b){return N("Owner's equity after the loan:",OE(b),"Both sides increased by $2,000.")},
+   function(b){return M("Find the error at "+b.name+".",[
+     Q("A bookkeeper at "+b.name+" records supplies received on account but does not record the amount owed. The records will show",
+       ["both sides equal","assets higher than liabilities plus owner's equity","liabilities higher than assets","owner's equity reduced"],1),
+     Q("The records at "+b.name+" show assets of "+fm(AT(b))+" but the other side totals "+fm(AT(b)-300)+". The correct next step is",
+       ["increase owner's equity by $300","locate the $300 transaction that was missed or entered incorrectly","record a $300 expense","report the difference as profit"],1)])},
+   function(b){return R([
+     "EQUATION LOG",
+     "Date ______",
+     fm(AT(b))+" = "+fm(LT(b))+" + "+fm(OE(b)),
+     "Status: BALANCED"])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("Assets $30,000 and liabilities $30,000. Owner's equity:",["$60,000","$0","$30,000","negative $30,000"],1),
+     Q("Records that do not balance indicate",["a loss","an error in the records","excessive debt","a profitable month"],1),
+     Q("Every asset is claimed by",["a creditor or the owner","the government","a customer","the bank only"],0),
+     Q("Recording only one side of a transaction causes",["a rounding error","the two sides to differ","a duplicate entry","no effect until year end"],1)])]}]},
+
+/* ================================= DAY 5 ================================= */
+{n:5,title:"Recording Transactions",teks:"130.187(c)(4)(B), (c)(1)(D)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("$20,000 = $6,000 + owner's equity. Owner's equity is",["$26,000","$14,000","$6,000","$20,000"],1),
+     Q("Records out of balance indicate",["a loss","an error in the records","too much debt","a withdrawal"],1),
+     Q("A business borrows $3,000. Owner's equity",["increases $3,000","decreases $3,000","does not change","doubles"],2)])]},
+
+ {name:"Transactions",mins:8,blocks:[
+   T("What a transaction is.",[
+     "A transaction is any business event that changes what the business owns or owes.",
+     "Purchases, sales, borrowing, repayments, investments, and withdrawals are all transactions.",
+     "Every transaction affects at least two accounts. This is called the dual effect.",
+     "When a business pays cash for equipment, cash decreases and equipment increases."],
+     Q("The dual effect means every transaction",
+       ["is recorded twice in the same account","affects at least two accounts","must be approved by two people","appears on two reports"],1)),
+   T("Four common transactions.",[
+     "The owner invests cash. Cash increases and Capital increases.",
+     "The business buys equipment with cash. Equipment increases and cash decreases. Total assets do not change.",
+     "The business buys supplies on account. Supplies increase and Accounts Payable increases.",
+     "The business pays part of what it owes. Cash decreases and Accounts Payable decreases."],
+     Q("Buying equipment with cash",
+       ["increases total assets","decreases total assets","leaves total assets unchanged","increases liabilities"],2)),
+   T("Three patterns.",[
+     "When one asset is exchanged for another, only the asset side changes.",
+     "When the business borrows money or the owner invests, both sides increase.",
+     "When the business pays a debt, both sides decrease."],
+     Q("A business pays $400 toward a supplier balance. Total assets and total liabilities",
+       ["both increase by $400","both decrease by $400","stay the same","move in opposite directions"],1)),
+   TXB("Select what increases and what decreases in each transaction.",[
+     {d:"The owner invests $5,000 cash in the business.",up:["Cash","Owner, Capital"],down:[]},
+     {d:"The business buys a $1,200 computer for cash.",up:["Equipment"],down:["Cash"]},
+     {d:"The business buys $300 of supplies on account.",up:["Supplies","Accounts Payable"],down:[]},
+     {d:"The business pays $100 on its account.",up:[],down:["Cash","Accounts Payable"]}],
+     "Accounts: Cash, Supplies, Equipment, Accounts Payable, Owner, Capital.")]},
+
+ {name:"Equity Effects",mins:6,blocks:[
+   T("Revenue, expenses, and withdrawals.",[
+     "Revenue is money earned by providing the service. Cash increases and Capital increases.",
+     "An expense is a cost of operating the business. Cash decreases and Capital decreases.",
+     "A withdrawal is the owner taking money out for personal use. Cash decreases and Capital decreases.",
+     "An expense and a withdrawal have the same effect on the accounts, but an expense is a cost of operating the business and a withdrawal is not."],
+     Q("An owner records a personal withdrawal as a business expense. Reported profit will appear",
+       ["higher than it should","lower than it should","unchanged","impossible to determine"],1)),
+   TXB("Select what increases and what decreases in each transaction.",[
+     {d:"Customers pay $600 cash for completed services.",up:["Cash","Owner, Capital"],down:[]},
+     {d:"The business pays $150 cash for advertising.",up:[],down:["Cash","Owner, Capital"]},
+     {d:"The owner takes $200 cash for personal use.",up:[],down:["Cash","Owner, Capital"]},
+     {d:"The business buys $250 of supplies on account.",up:["Supplies","Accounts Payable"],down:[]}],
+     "Accounts: Cash, Supplies, Equipment, Accounts Payable, Owner, Capital."),
+   M("Practice.",[
+     Q("Which of these does not change owner's equity?",
+       ["Earning revenue","Paying an advertising bill","Buying equipment with cash","An owner withdrawal"],2),
+     Q("Revenue of $900 and expenses of $340 in a month change owner's equity by",
+       ["an increase of $1,240","an increase of $560","a decrease of $560","no change"],1)])]},
+
+ {name:"Your Business",mins:9,blocks:[
+   function(b){return P(b.sit.tx+" Seven transactions, in order.")},
+   function(b){var cap=b.owner+", Capital";return TXB("The first week at "+b.name+".",[
+     {d:b.owner+" invests "+fm(b.invest)+" cash to start the business.",up:["Cash",cap],down:[],cap:cap},
+     {d:b.tx.equipD+" for "+fm(b.tx.equipV)+", paid in cash.",up:["Equipment"],down:["Cash"],cap:cap},
+     {d:b.tx.suppD+" for "+fm(b.tx.suppV)+".",up:["Supplies","Accounts Payable"],down:[],cap:cap},
+     {d:"Paid "+fm(b.tx.payV)+" to "+b.tx.vendor+" on account.",up:[],down:["Cash","Accounts Payable"],cap:cap},
+     {d:b.tx.revD+", "+fm(b.tx.revV)+".",up:["Cash",cap],down:[],cap:cap},
+     {d:b.tx.expD+", "+fm(b.tx.expV)+" in cash.",up:[],down:["Cash",cap],cap:cap},
+     {d:b.owner+" takes "+fm(b.tx.drawV)+" cash for personal use.",up:[],down:["Cash",cap],cap:cap}])},
+   function(b){return N("Cash after all seven transactions. Start at "+fm(b.invest)+", minus "+fm(b.tx.equipV)+", minus "+fm(b.tx.payV)+", plus "+fm(b.tx.revV)+", minus "+fm(b.tx.expV)+", minus "+fm(b.tx.drawV)+":",endCash(b),
+     "Work through the amounts in order.")},
+   function(b){return N("Owner's equity. Start at "+fm(b.invest)+", add revenue, subtract the expense and the withdrawal:",endOE(b),
+     fm(b.invest)+" + "+fm(b.tx.revV)+" minus "+fm(b.tx.expV)+" minus "+fm(b.tx.drawV)+".")},
+   function(b){return N("Accounts payable. "+fm(b.tx.suppV)+" received on account, "+fm(b.tx.payV)+" paid:",endL(b),
+     fm(b.tx.suppV)+" minus "+fm(b.tx.payV)+".")},
+   function(b){return N("Total assets. Cash "+fm(endCash(b))+" plus equipment "+fm(b.tx.equipV)+" plus supplies "+fm(b.tx.suppV)+":",endA(b),
+     "Add the three amounts.")},
+   function(b){return M("Check the week at "+b.name+".",[
+     Q("Does "+fm(endA(b))+" equal "+fm(endL(b))+" plus "+fm(endOE(b))+"?",
+       ["Yes, the records balance","No, an amount is missing"],0),
+     Q("If "+b.owner+" had recorded the "+fm(b.tx.drawV)+" withdrawal as an expense, reported profit would appear",
+       ["higher by "+fm(b.tx.drawV),"lower by "+fm(b.tx.drawV),"unchanged","higher by half that amount"],1)])},
+   STAMP("BALANCED"),
+   function(b){return R([
+     "EQUATION LOG",
+     "Date ______",
+     fm(endA(b))+" = "+fm(endL(b))+" + "+fm(endOE(b)),
+     "Status: BALANCED"])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("The owner invests cash. The effect is",["Cash increases, Capital increases","Cash increases, liabilities increase","Cash decreases, Capital increases","Cash increases only"],0),
+     Q("Paying for advertising with cash",["increases owner's equity","decreases owner's equity","does not affect owner's equity","increases liabilities"],1),
+     Q("A withdrawal differs from an expense because it",["is a larger amount","is not a cost of operating the business","does not reduce cash","increases Capital"],1),
+     Q("Buying supplies on account",["increases assets and liabilities","increases assets only","decreases cash","increases owner's equity"],0)])]}]},
+
+/* ================================= DAY 6 ================================= */
+{n:6,title:"Accounting Careers and Books Check 1",teks:"130.187(c)(3)(B)(C), (c)(4)(B), (c)(1)(D)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("Revenue affects owner's equity by",["increasing it","decreasing it","leaving it unchanged","converting it to a liability"],0),
+     Q("An expense affects owner's equity by",["increasing it","decreasing it","leaving it unchanged","moving it to accounts payable"],1),
+     Q("Every transaction affects at least",["one account","two accounts","three accounts","every account"],1)])]},
+
+ {name:"Careers",mins:8,blocks:[
+   T("Accounting roles.",[
+     "A bookkeeper records daily transactions, tracks bills, and processes payroll. Many bookkeeping positions do not require a four-year degree.",
+     "A staff accountant prepares financial statements and analysis and typically holds a bachelor's degree in accounting.",
+     "A controller manages a company's entire accounting department.",
+     "A chief financial officer serves on the executive team and directs the company's financial strategy."],
+     Q("Which role would most likely prepare a company's financial statements?",
+       ["A bookkeeper","A staff accountant","A payroll clerk","A cashier"],1)),
+   T("Specialized roles.",[
+     "An auditor examines financial records for accuracy, either within a company or as part of an outside firm.",
+     "A forensic accountant investigates financial fraud and often testifies in court proceedings.",
+     "Tax accountants, government accountants, and cost accountants each work within a specific area of the field."],
+     Q("A company suspects an employee has been diverting funds. The specialist most likely engaged is",
+       ["a bookkeeper","a forensic accountant","a controller","a tax accountant"],1)),
+   T("Public and private accounting.",[
+     "Public accounting means working for a firm that provides accounting services to many client businesses, including audits, tax preparation, and advising.",
+     "Private accounting means working within one company's own accounting department.",
+     "Many accountants begin in public accounting and later move into a private accounting role."],
+     Q("An accountant who audits many different client companies each year works in",
+       ["private accounting","public accounting","government accounting","forensic accounting"],1)),
+   T("Licensing and certification.",[
+     "A Certified Public Accountant, or CPA, is licensed by the state. Only a CPA can sign an official audit opinion or represent a client before the IRS.",
+     "In Texas, CPA licensure requires a bachelor's degree, 150 total college credit hours, passing all four sections of the CPA exam, and supervised work experience.",
+     "The Certified Management Accountant, or CMA, focuses on internal company finance and strategy.",
+     "All of these licenses require continuing education each year because accounting standards and tax law change over time."],
+     Q("Beyond a bachelor's degree, Texas CPA licensure requires",
+       ["only passing the CPA exam","150 credit hours, the exam, and supervised experience","five years of experience alone","a master's degree specifically"],1)),
+   S("Public or private accounting?","Select the correct column for each situation.",["Public","Private"],[
+     {t:"Auditing thirty client companies a year",b:0},
+     {t:"Managing the records inside one dealership",b:1},
+     {t:"A CPA firm preparing taxes for local businesses",b:0},
+     {t:"The accounting department at a hospital",b:1}])]},
+
+ {name:"Books Check",mins:13,blocks:[
+   T("Books Check 1.",[
+     "Ten questions covering Unit 1, using the records for your business."]),
+   function(b){return M("Accounts at "+b.name+".",[
+     Q("Which is an asset of "+b.name+"?",[b.snapA[1].n,b.snapL[0].n,b.snapX[0],b.snapL[1].n],0),
+     Q("Which is a liability of "+b.name+"?",[b.snapL[1].n,b.snapA[2].n,b.snapX[1],b.snapA[0].n],0)])},
+   function(b){return N(b.name+" has assets of "+fm(AT(b))+" and liabilities of "+fm(LT(b))+". Owner's equity:",OE(b),
+     fm(AT(b))+" minus "+fm(LT(b))+".")},
+   function(b){return N("Owner's equity is "+fm(endOE(b))+" and liabilities are "+fm(endL(b))+". Total assets:",endA(b),
+     fm(endL(b))+" plus "+fm(endOE(b))+".")},
+   function(b){return N("Monthly revenue at "+b.name+" is "+fm(b.rev)+" and monthly expenses are "+fm(EXP(b))+". Monthly profit:",PROF(b),
+     fm(b.rev)+" minus "+fm(EXP(b))+".")},
+   function(b){return M("Apply the concepts.",[
+     Q(b.owner+" takes $100 cash for personal use. This is recorded as",
+       ["a withdrawal, decreasing cash and Capital","an expense, decreasing cash and Capital","a decrease in cash and liabilities","no entry until year end"],0),
+     Q("A customer pays "+b.name+" cash for a completed job. The effect is",
+       ["Cash increases, Capital increases","Cash increases, liabilities increase","Cash increases, Accounts Payable decreases","Cash increases, equipment decreases"],0),
+     Q(b.owner+"'s personal vehicle appears in the business's records. This is",
+       ["correct, since the owner owns the business","a violation of the business entity concept","acceptable if used for work","required for depreciation"],1)])},
+   function(b){return N("Cash check. Start at "+fm(d8cash(b))+". Revenue of "+fm(b.tx.revV)+" received. Expense of "+fm(b.tx.expV)+" paid. "+b.owner+" withdraws "+fm(b.tx.drawV)+". Ending cash:",endCash(b),
+     "Add the revenue, then subtract the expense and the withdrawal.")},
+   M("Final questions.",[
+     Q("A CPA can perform which task a bookkeeper cannot?",
+       ["Record transactions","Sign an official audit opinion","Prepare a spreadsheet","Calculate payroll"],1),
+     Q("Records that do not balance indicate",
+       ["a loss for the period","an error in the records","excessive withdrawals","business growth"],1)]),
+   STAMP("BOOKS CHECKED"),
+   function(b){return R([
+     "EQUATION LOG",
+     "Date ______",
+     "Books Check 1 score: ____",
+     fm(endA(b))+" = "+fm(endL(b))+" + "+fm(endOE(b))])}]}]}
+];
+
+/* ================= DAYS ================= */
+var DAYS=[
+{n:1,title:"What Accounting Is",teks:"130.187(c)(2)(A)(B), (c)(4)(B)",parts:[0]},
+{n:2,title:"Assets: What a Business Owns",teks:"130.187(c)(4)(B), (c)(13)(A)",parts:[1]},
+{n:3,title:"Liabilities and Owner's Equity",teks:"130.187(c)(4)(B)",parts:[2]},
+{n:4,title:"The Accounting Equation",teks:"130.187(c)(4)(B), (c)(1)(B)(E)",parts:[3]},
+{n:5,title:"Recording Transactions",teks:"130.187(c)(4)(B), (c)(1)(D)",parts:[4]},
+{n:6,title:"Accounting Careers and Books Check 1",teks:"130.187(c)(3)(B)(C), (c)(4)(B), (c)(1)(D)",parts:[5]}
+];
+
+/* ================= ENGINE ================= */
+function lsGet(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var KP=COURSE.key;
+var state={biz:lsGet(KP+"biz")||"",groups:lsGet(KP+"groups")||{},done:lsGet(KP+"done")||{}};
+var cur={li:-1,sec:0,blk:0,secNode:null,q:0,first:0,warn:false};
+
+function scrollTo_(n){try{if(n&&n.scrollIntoView)n.scrollIntoView({behavior:"smooth",block:"center"})}catch(e){}}
+function curBiz(){for(var i=0;i<BIZ.length;i++){if(BIZ[i].id===state.biz)return BIZ[i]}return null}
+function go(h){if(location.hash===h){route()}else{location.hash=h}}
+function el(tag,cls,html){var d=document.createElement(tag);if(cls)d.className=cls;if(html!==undefined)d.innerHTML=html;return d}
+function shuf(a){var c=a.slice();for(var i=c.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=c[i];c[i]=c[j];c[j]=t}return c}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function pad2(n){return (n<10?"0":"")+n}
+function mono(name){var w=name.split(" ");var a=w[0]?w[0][0]:"B";var b=w[1]?w[1][0]:"";return (a+b).toUpperCase()}
+function today(){return new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+
+function setBiz(id){state.biz=id;lsSet(KP+"biz",id);fillBizSel();
+  if(cur.warn){var w=document.getElementById("warnpick");if(w)w.remove();cur.warn=false;if(curBiz()){showBlock()}}}
+function fillBizSel(){}
+
+/* ---------- router ---------- */
+function route(){
+  var h=location.hash||"#/";
+  var v=document.getElementById("view");v.innerHTML="";
+  if(h.indexOf("#/day/")===0){var n=parseInt(h.slice(6),10);if(n>=1&&n<=DAYS.length){renderLesson(n-1);return}}
+  if(h==="#/teacher"){renderTeacher();return}
+  renderHome();
+}
+
+/* ---------- home ---------- */
+function renderHome(){
+  var v=document.getElementById("view");
+  var hero=el("section","hero");
+  hero.appendChild(el("div","eyebrow",COURSE.heroEyebrow));
+  hero.appendChild(el("h1","",COURSE.heroTitle));
+  hero.appendChild(el("p","",COURSE.heroTag));
+  var cta=el("div","cta");
+  var b1=el("button","btn green",COURSE.startLabel);b1.onclick=function(){go("#/day/1")};
+  cta.appendChild(b1);hero.appendChild(cta);v.appendChild(hero);
+  var ul=el("div","unitlabel");
+  ul.appendChild(el("h2","",COURSE.unitTitle));
+  ul.appendChild(el("span","",COURSE.unitMeta));
+  v.appendChild(ul);
+  var lg=el("div","ledger");
+  DAYS.forEach(function(D,i){
+    var r=el("div","lrow"+(state.done[i]?" done":""));
+    r.setAttribute("role","button");r.tabIndex=0;
+    var left=el("div","dnum","DAY "+pad2(D.n));
+    var mid=el("div","");
+    mid.appendChild(el("div","dtitle",esc(D.title)));
+    mid.appendChild(el("div","dsub","TEKS "+esc(D.teks)));
+    var st=state.done[i]?("&#10003; "+state.done[i].f+"/"+state.done[i].q):"OPEN";
+    var right=el("div","dstat",st);
+    r.appendChild(left);r.appendChild(mid);r.appendChild(right);
+    r.onclick=function(){go("#/day/"+D.n)};
+    r.onkeydown=function(e){if(e.key==="Enter")go("#/day/"+D.n)};
+    lg.appendChild(r);
+  });
+  if(COURSE.nextUnit){
+    var lock=el("div","lrow lockedrow");
+    lock.appendChild(el("div","dnum",COURSE.nextUnit.num));
+    var lm=el("div","");lm.appendChild(el("div","dtitle",COURSE.nextUnit.t));
+    lm.appendChild(el("div","dsub",COURSE.nextUnit.sub));
+    lock.appendChild(lm);lock.appendChild(el("div","dstat",""));
+    lg.appendChild(lock);
+  }
+  v.appendChild(lg);
+  addFooter(v);
+}
+
+function addFooter(v){
+  var f=el("div","footer");
+  f.appendChild(el("span","",COURSE.footer));
+  var right=el("span","");
+  var rs=el("button","","Reset progress");
+  rs.onclick=function(){if(confirm("Erase all saved progress on this device?")){state.done={};lsSet(KP+"done",state.done);route()}};
+  right.appendChild(rs);
+  f.appendChild(right);v.appendChild(f);
+}
+
+/* ---------- businesses + draw ---------- */
+
+/* ---------- lesson flow ---------- */
+function daySecs(D){
+  var out=[];
+  D.parts.forEach(function(pi,idx){
+    LESSONS[pi].secs.forEach(function(s){
+      if(idx>0&&s.name==="Warm-Up")return;
+      if(idx<D.parts.length-1&&s.name==="Exit")return;
+      out.push(s);
+    });
+  });
+  return out;
+}
+function renderLesson(li){
+  var D=DAYS[li];
+  cur={li:li,sec:0,blk:0,secNode:null,q:0,first:0,warn:false,secs:daySecs(D)};
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow",COURSE.dayEyebrow+" &middot; DAY "+pad2(D.n)));
+  hd.appendChild(el("h1","",esc(D.title)));
+  hd.appendChild(el("span","teks","TEKS "+esc(D.teks)));
+  var steps=el("div","steps");steps.id="stepdots";
+  cur.secs.forEach(function(s,i){steps.appendChild(el("span","stepdot"+(i===0?" now":""),esc(s.name.toUpperCase())))});
+  hd.appendChild(steps);
+  v.appendChild(hd);
+  var body=el("div","");body.id="lbody";v.appendChild(body);
+  startSection();
+}
+function updateDots(){
+  var dots=document.getElementById("stepdots");if(!dots)return;
+  dots.innerHTML="";
+  cur.secs.forEach(function(s,i){
+    var cls="stepdot"+(i<cur.sec?" past":(i===cur.sec?" now":""));
+    dots.appendChild(el("span",cls,esc(s.name.toUpperCase())));
+  });
+}
+function startSection(){
+  var s=cur.secs[cur.sec];
+  var body=document.getElementById("lbody");
+  var bar=el("div","secbar");
+  bar.appendChild(el("h2","",esc(s.name)));
+  body.appendChild(bar);
+  cur.secNode=el("div","");body.appendChild(cur.secNode);
+  updateDots();
+  showBlock();
+}
+function showBlock(){
+  var s=cur.secs[cur.sec];
+  var bl=s.blocks[cur.blk];
+  if(typeof bl==="function"){
+    var b=curBiz();
+    if(!b){
+      var w=el("div","warnpick",COURSE.pickWarn);
+      w.id="warnpick";cur.secNode.appendChild(w);cur.warn=true;
+      scrollTo_(w);return;
+    }
+    bl=bl(b);
+  }
+  var node=renderBlock(bl);
+  cur.secNode.appendChild(node);
+  scrollTo_(node);
+}
+function blockDone(){
+  var s=cur.secs[cur.sec];
+  cur.blk++;
+  if(cur.blk<s.blocks.length){showBlock();return}
+  cur.sec++;cur.blk=0;
+  if(cur.sec<cur.secs.length){startSection();return}
+  finishLesson();
+}
+function vcode(s){var h=5381;for(var i=0;i<s.length;i++){h=((h*33)^s.charCodeAt(i))>>>0}return ("0000"+h.toString(36).toUpperCase()).slice(-4)}
+function finishLesson(){
+  var D=DAYS[cur.li];
+  updateDots();
+  state.done[cur.li]={f:cur.first,q:cur.q,when:Date.now()};
+  lsSet(KP+"done",state.done);
+  var body=document.getElementById("lbody");
+  var r=el("div","result");
+  r.appendChild(el("div","sub","DAY "+pad2(D.n)+" COMPLETE"));
+  r.appendChild(el("div","bignum",cur.first+" / "+cur.q));
+  r.appendChild(el("div","sub","SCORE"));
+  var b=curBiz();
+  r.appendChild(el("div","bizline",(b?esc(b.name)+" &middot; ":"")+today()));
+  var form=el("div","resultform");
+  var lab=el("label","","YOUR NAME");lab.htmlFor="rname";
+  var nameIn=el("input","namein");nameIn.id="rname";nameIn.type="text";nameIn.placeholder="First and last name";
+  var ta=el("textarea","copyta");ta.rows=7;ta.readOnly=true;
+  function block(){
+    var nm=nameIn.value.trim();
+    var sc=cur.first+"/"+cur.q;
+    var dt=today();
+    var ent=b?b.name:"none selected";
+    var code=vcode("GHS26|"+D.n+"|"+sc+"|"+dt+"|"+ent+"|"+nm.toLowerCase());
+    return COURSE.brand+" RESULT\nDay "+D.n+": "+D.title+"\nName: "+(nm||"____________")+"\n"+COURSE.entWord+": "+ent+"\nScore: "+sc+"\nDate: "+dt+"\nCode: "+code;
+  }
+  function refresh(){ta.value=block()}
+  nameIn.addEventListener("input",refresh);
+  refresh();
+  var fb=el("div","fb","");fb.style.marginTop="8px";
+  var copy=el("button","btn green","Copy for Canvas");copy.style.marginTop="12px";
+  copy.onclick=function(){
+    if(!nameIn.value.trim()){fb.className="fb no";fb.style.color="#F2B8AF";fb.textContent="Type your name first.";nameIn.focus();return}
+    refresh();
+    function okmsg(){fb.className="fb ok";fb.style.color="#9FD8B4";fb.textContent="Copied. Paste it into today's Canvas assignment."}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ta.value).then(okmsg,function(){ta.select();try{document.execCommand("copy")}catch(e){}okmsg()});
+    }else{ta.select();try{document.execCommand("copy")}catch(e){}okmsg()}
+  };
+  form.appendChild(lab);form.appendChild(nameIn);form.appendChild(ta);form.appendChild(copy);form.appendChild(fb);
+  r.appendChild(form);
+  r.appendChild(el("div","tnote",COURSE.resultNote));
+  var back=el("button","btn ghost","Back to Days");back.style.marginTop="10px";back.style.color="#fff";back.style.borderColor="#fff";
+  back.onclick=function(){go("#/")};
+  r.appendChild(back);
+  body.appendChild(r);
+  scrollTo_(r);
+}
+function scoreQ(firstTry){cur.q++;if(firstTry)cur.first++}
+
+/* ---------- block renderers ---------- */
+function renderBlock(bl){
+  if(bl.t==="teach")return rTeach(bl);
+  if(bl.t==="note")return rNote(bl);
+  if(bl.t==="mcq")return rMcq(bl);
+  if(bl.t==="sort")return rSort(bl);
+  if(bl.t==="num")return rNum(bl);
+  if(bl.t==="tx")return rTx(bl);
+  if(bl.t==="record")return rRecord(bl);
+  if(bl.t==="stamp")return rStamp(bl);
+  if(bl.t==="pick")return rPick(bl);
+  return el("div","","");
+}
+function contBtn(label){var b=el("button","btn","Continue");if(label)b.textContent=label;b.onclick=function(){b.disabled=true;blockDone()};return b}
+
+function rPick(bl){
+  var c=el("div","card pickcard");
+  var body=el("div","");c.appendChild(body);
+  function grid(){
+    body.innerHTML="";
+    body.appendChild(el("h3","","Choose a business"));
+    body.appendChild(el("p","tnote","Review each one, then select the business you want to run."));
+    var g=el("div","picklist");
+    BIZ.forEach(function(b){
+      var row=el("div","pickrow2");
+      var m=el("div","mchip",mono(b.name));m.style.background="hsl("+b.hue+",45%,34%)";
+      var mid=el("div","");
+      mid.appendChild(el("div","pname",esc(b.name)));
+      mid.appendChild(el("div","pdoes",esc(b.does)));
+      mid.appendChild(el("div","pprice",esc(b.price)));
+      var btn=el("button","btn ghost sm","View");
+      btn.onclick=function(){detail(b)};
+      row.appendChild(m);row.appendChild(mid);row.appendChild(btn);
+      g.appendChild(row);
+    });
+    body.appendChild(g);
+  }
+  function detail(b){
+    body.innerHTML="";
+    var m=el("div","mchip",mono(b.name));m.style.background="hsl("+b.hue+",45%,34%)";
+    body.appendChild(m);
+    body.appendChild(el("h3","",esc(b.name)));
+    body.appendChild(el("div","who","Owner: "+esc(b.owner)));
+    body.appendChild(el("div","pprice",esc(b.price)));
+    var st=el("div","story");
+    b.story.forEach(function(line){st.appendChild(el("p","",esc(line)))});
+    body.appendChild(st);
+    var oh=el("div","opsblock");
+    oh.appendChild(el("div","olabel","CUSTOMERS"));
+    oh.appendChild(el("p","",esc(b.customers)));
+    oh.appendChild(el("div","olabel","OPERATIONS"));
+    b.ops.forEach(function(line){oh.appendChild(el("p","",esc(line)))});
+    oh.appendChild(el("div","olabel","MONTHLY"));
+    oh.appendChild(el("p","","Revenue about "+fm(b.rev)+". Expenses about "+fm(EXP(b))+"."));
+    body.appendChild(oh);
+    var row=el("div","btnrow");
+    var back=el("button","btn ghost","Back");
+    back.onclick=function(){grid();scrollTo_(c)};
+    var sel=el("button","btn green","Select this business");
+    sel.onclick=function(){choose(b)};
+    row.appendChild(back);row.appendChild(sel);
+    body.appendChild(row);
+    scrollTo_(c);
+  }
+  function choose(b){
+    setBiz(b.id);
+    body.innerHTML="";
+    body.appendChild(el("h3","","You are running "+esc(b.name)));
+    body.appendChild(el("p","","Owner: "+esc(b.owner)+". "+esc(b.does)));
+    body.appendChild(el("p","tnote","You will keep the records for this business for the rest of this unit."));
+    var row=el("div","btnrow");
+    var chg=el("button","btn ghost","Choose a different business");
+    chg.onclick=function(){grid();scrollTo_(c)};
+    row.appendChild(contBtn());row.appendChild(chg);
+    body.appendChild(row);
+    scrollTo_(c);
+  }
+  grid();
+  return c;
+}
+function rNote(bl){
+  var c=el("div","card");
+  c.appendChild(el("p","big",esc(bl.txt)));
+  var row=el("div","btnrow");row.appendChild(contBtn());c.appendChild(row);
+  return c;
+}
+function rTeach(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.h)));
+  var ul=el("ul","klist");
+  bl.lines.forEach(function(x){ul.appendChild(el("li","",esc(x)))});
+  c.appendChild(ul);
+  var row=el("div","btnrow");
+  var nx=contBtn("Next");
+  if(bl.check){
+    nx.disabled=true;
+    c.appendChild(qNode(bl.check,function(){nx.disabled=false}));
+  }
+  row.appendChild(nx);c.appendChild(row);
+  return c;
+}
+function qNode(q,onDone){
+  var wrap=el("div","");
+  wrap.appendChild(el("div","q",esc(q.q)));
+  var opts=el("div","opts");
+  var attempts=0,settled=false;
+  var options=shuf(q.o.map(function(t,i){return {t:t,ok:i===q.a}}));
+  var fb=el("div","fb");
+  options.forEach(function(o){
+    var b=el("button","opt",esc(o.t));
+    b.onclick=function(){
+      if(settled)return;
+      attempts++;
+      if(o.ok){
+        settled=true;b.classList.add("right");
+        fb.className="fb ok";fb.textContent="Correct.";
+        scoreQ(attempts===1);
+        Array.prototype.forEach.call(opts.children,function(x){x.disabled=true});
+        onDone();
+      }else{
+        b.classList.add("wrong");b.disabled=true;
+        fb.className="fb no";fb.textContent="Not that one.";
+        if(attempts===2&&q.why){
+          var h=el("div","hint",esc(q.why));wrap.appendChild(h);
+        }
+        if(attempts>=3){
+          settled=true;
+          options.forEach(function(oo,ii){if(oo.ok)opts.children[ii].classList.add("right")});
+          Array.prototype.forEach.call(opts.children,function(x){x.disabled=true});
+          fb.className="fb no";fb.textContent="Here is the right answer. Read it before moving on.";
+          scoreQ(false);
+          onDone();
+        }
+      }
+    };
+    opts.appendChild(b);
+  });
+  wrap.appendChild(opts);wrap.appendChild(fb);
+  return wrap;
+}
+function rMcq(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  var done=0;var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;
+  bl.qs.forEach(function(q){
+    c.appendChild(qNode(q,function(){done++;if(done===bl.qs.length)nx.disabled=false}));
+  });
+  row.appendChild(nx);c.appendChild(row);
+  return c;
+}
+function rSort(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  c.appendChild(el("p","",esc(bl.prompt)));
+  var items=shuf(bl.items);
+  var idx=0,streak=0,first=0;
+  var stage=el("div","sortnow");
+  var buckets=el("div","buckets");
+  var lists=[];
+  bl.buckets.forEach(function(bn){
+    var bu=el("div","bucket");bu.appendChild(el("h4","",esc(bn.toUpperCase())));
+    var pl=el("div","placed");bu.appendChild(pl);lists.push(pl);buckets.appendChild(bu);
+  });
+  var scoreLine=el("div","score","");
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);
+  function paint(){
+    if(idx>=items.length){
+      stage.innerHTML='<div class="item">Done.</div><div class="val">'+first+" of "+items.length+" correct.</div>";
+      nx.disabled=false;scoreLine.textContent="";return;
+    }
+    var it=items[idx];
+    stage.innerHTML='<div class="item">'+esc(it.t)+'</div>'+(it.v!==undefined?'<div class="val">'+fm(it.v)+"</div>":"");
+    var bb=el("div","bucketbtns");
+    bl.buckets.forEach(function(bn,bi){
+      var b=el("button","btn ghost sm",esc(bn));
+      b.onclick=function(){
+        var ok=(bi===it.b);
+        scoreQ(ok);
+        if(ok){first++;streak++;
+          var tag=el("span","ok",esc(it.t));lists[it.b].appendChild(tag);
+        }else{streak=0;
+          var tag2=el("span","no",esc(it.t));lists[it.b].appendChild(tag2);
+        }
+        scoreLine.innerHTML="SCORE "+first+"/"+items.length+(streak>1?' &middot; <span class="streak">STREAK &times;'+streak+"</span>":"");
+        idx++;paint();
+      };
+      bb.appendChild(b);
+    });
+    stage.appendChild(bb);
+  }
+  c.appendChild(stage);c.appendChild(buckets);c.appendChild(scoreLine);c.appendChild(row);
+  paint();
+  return c;
+}
+function rNum(bl){
+  var c=el("div","card");
+  c.appendChild(el("div","q",esc(bl.prompt)));
+  var nr=el("div","numrow");
+  nr.appendChild(el("span","dollar","$"));
+  var inp=el("input","numin");inp.type="text";inp.inputMode="numeric";inp.placeholder="0";
+  nr.appendChild(inp);
+  var ck=el("button","btn sm","Check");nr.appendChild(ck);
+  c.appendChild(nr);
+  var fb=el("div","fb");c.appendChild(fb);
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);c.appendChild(row);
+  var attempts=0,settled=false;
+  function submit(){
+    if(settled)return;
+    var raw=inp.value.replace(/[$,\s]/g,"");
+    if(raw==="")return;
+    var vnum=Number(raw);
+    attempts++;
+    if(Math.abs(vnum-bl.ans)<0.005){
+      settled=true;fb.className="fb ok";
+      fb.textContent="Correct.";
+      scoreQ(attempts===1);inp.disabled=true;ck.disabled=true;nx.disabled=false;
+    }else{
+      fb.className="fb no";fb.textContent="Not it. Check the math and try again.";
+      if(attempts===2&&bl.why){c.insertBefore(el("div","hint",esc(bl.why)),row)}
+      if(attempts>=3){
+        settled=true;fb.className="fb no";
+        fb.textContent="The answer is "+fm(bl.ans)+". "+(bl.why||"");
+        scoreQ(false);inp.disabled=true;ck.disabled=true;nx.disabled=false;
+      }
+    }
+  }
+  ck.onclick=submit;
+  inp.addEventListener("keydown",function(e){if(e.key==="Enter")submit()});
+  return c;
+}
+function rTx(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  if(bl.note)c.appendChild(el("p","tnote",esc(bl.note)));
+  var doneCount=0;
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);
+  bl.txs.forEach(function(tx){
+    c.appendChild(txCard(tx,function(){doneCount++;if(doneCount===bl.txs.length)nx.disabled=false}));
+  });
+  c.appendChild(row);
+  return c;
+}
+function txCard(tx,onDone){
+  var cap=tx.cap||"Owner, Capital";
+  var ACC=["Cash","Supplies","Equipment","Accounts Payable",cap];
+  var card=el("div","txcard");
+  card.appendChild(el("div","txd",esc(tx.d)));
+  var sel={up:{},dn:{}};
+  var attempts=0,settled=false;
+  function chipRow(label,key){
+    var pr=el("div","pickrow");
+    pr.appendChild(el("h5","",label));
+    var ch=el("div","acctchips");
+    ACC.forEach(function(a){
+      var b=el("button","acct",esc(a));
+      b.onclick=function(){
+        if(settled)return;
+        sel[key][a]=!sel[key][a];
+        if(sel[key][a]){b.classList.add(key==="up"?"selup":"seldn");sel[key]["__none__"]=false;
+          var nb=ch.querySelector(".none");if(nb)nb.classList.remove(key==="up"?"selup":"seldn");}
+        else{b.classList.remove("selup","seldn")}
+      };
+      ch.appendChild(b);
+    });
+    var nb=el("button","acct none","Nothing");
+    nb.onclick=function(){
+      if(settled)return;
+      var on=!sel[key]["__none__"];
+      ACC.forEach(function(a){sel[key][a]=false});
+      Array.prototype.forEach.call(ch.children,function(x){x.classList.remove("selup","seldn")});
+      sel[key]["__none__"]=on;
+      if(on)nb.classList.add(key==="up"?"selup":"seldn");
+    };
+    ch.appendChild(nb);
+    pr.appendChild(ch);
+    return pr;
+  }
+  var upRow=chipRow("WHAT GOES UP","up");
+  var dnRow=chipRow("WHAT GOES DOWN","dn");
+  card.appendChild(upRow);card.appendChild(dnRow);
+  var fb=el("div","fb");card.appendChild(fb);
+  var ck=el("button","btn sm","Check this one");ck.style.marginTop="12px";
+  card.appendChild(ck);
+  function picked(key){return ACC.filter(function(a){return sel[key][a]})}
+  function rowOK(key,ans){
+    var p=picked(key);
+    if(ans.length===0){return p.length===0&&sel[key]["__none__"]===true}
+    if(p.length!==ans.length)return false;
+    for(var i=0;i<ans.length;i++){if(p.indexOf(ans[i])<0)return false}
+    return true;
+  }
+  function reveal(){
+    ACC.forEach(function(a){sel.up[a]=tx.up.indexOf(a)>=0;sel.dn[a]=tx.down.indexOf(a)>=0});
+    sel.up["__none__"]=tx.up.length===0;sel.dn["__none__"]=tx.down.length===0;
+    [upRow,dnRow].forEach(function(rw,ri){
+      var key=ri===0?"up":"dn";var ans=ri===0?tx.up:tx.down;
+      Array.prototype.forEach.call(rw.querySelectorAll(".acct"),function(b){
+        b.classList.remove("selup","seldn");
+        var isNone=b.classList.contains("none");
+        var on=isNone?(ans.length===0):(ans.indexOf(b.textContent)>=0);
+        if(on)b.classList.add(key==="up"?"selup":"seldn");
+      });
+    });
+  }
+  ck.onclick=function(){
+    if(settled)return;
+    var upEmptyPick=picked("up").length===0&&!sel.up["__none__"];
+    var dnEmptyPick=picked("dn").length===0&&!sel.dn["__none__"];
+    if(upEmptyPick||dnEmptyPick){fb.className="fb no";fb.textContent="Make a pick in both rows. Tap Nothing if nothing moves.";return}
+    attempts++;
+    var u=rowOK("up",tx.up),d=rowOK("dn",tx.down);
+    if(u&&d){
+      settled=true;fb.className="fb ok";
+      fb.textContent="Correct.";
+      scoreQ(attempts===1);ck.disabled=true;onDone();
+    }else{
+      fb.className="fb no";
+      fb.textContent=!u&&!d?"Look again at both rows.":(!u?"Look again at what goes up.":"Look again at what goes down.");
+      if(attempts>=3){
+        settled=true;reveal();
+        fb.className="fb no";fb.textContent="Here is the correct move. Study it before you continue.";
+        scoreQ(false);ck.disabled=true;onDone();
+      }
+    }
+  };
+  return card;
+}
+function rRecord(bl){
+  var c=el("div","record");
+  c.appendChild(el("h4","","RECORD THIS IN YOUR BOOKS"));
+  bl.lines.forEach(function(x){c.appendChild(el("div","rline",esc(x)))});
+  var b=el("button","btn green sm","Recorded in our Books");b.style.marginTop="10px";
+  b.onclick=function(){b.disabled=true;b.textContent="In the Books";blockDone()};
+  c.appendChild(b);
+  return c;
+}
+function rStamp(bl){
+  var c=el("div","card");
+  var w=el("div","stampwrap");
+  var s=el("div","stamp",esc(bl.label));
+  w.appendChild(s);c.appendChild(w);
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);c.appendChild(row);
+  setTimeout(function(){s.classList.add("show")},60);
+  setTimeout(function(){nx.disabled=false},700);
+  return c;
+}
+
+/* ---------- teacher ---------- */
+function renderTeacher(){
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow","FOR THE TEACHER"));
+  hd.appendChild(el("h1","","Run of Show"));
+  v.appendChild(hd);
+  COURSE.teacher.forEach(function(card){
+    var c=el("div","card");
+    c.appendChild(el("h3","",card.h));
+    card.ps.forEach(function(p){c.appendChild(el("p","",p))});
+    v.appendChild(c);
+  });
+  var c3=el("div","card");
+  c3.appendChild(el("h3","",COURSE.mapTitle));
+  DAYS.forEach(function(D){
+    c3.appendChild(el("p","","Day "+D.n+" &middot; "+esc(D.title)+" &middot; TEKS "+esc(D.teks)));
+  });
+  v.appendChild(c3);
+  addFooter(v);
+}
+
+/* ---------- boot ---------- */
+fillBizSel();
+
+window.addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>

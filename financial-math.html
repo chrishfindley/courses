@@ -1,0 +1,1088 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payday · Financial Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F5EE;
+  --card:#FFFFFF;
+  --rule:#DBDECB;
+  --ink:#182219;
+  --ink2:#4A5548;
+  --green:#1B7A4A;
+  --green-deep:#0C3B24;
+  --green-soft:#E4F0E7;
+  --red:#B23A2E;
+  --red-soft:#F7E7E4;
+  --gold:#C79A2A;
+  --disp:"Bricolage Grotesque",sans-serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font-family:var(--body);cursor:pointer}
+input,select{font-family:var(--body)}
+a{color:var(--green-deep)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--ink)}
+.topin{max-width:760px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:.02em;cursor:pointer;user-select:none}
+.brand small{display:block;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.14em;color:var(--green)}
+.top nav{display:flex;gap:6px;margin-left:auto}
+.navbtn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.navbtn.on{background:var(--ink);color:var(--paper)}
+.bizpick{display:flex;align-items:center;gap:8px;width:100%;padding-top:2px}
+.bizpick label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--ink2)}
+.bizpick select{flex:1;max-width:340px;border:1.5px solid var(--ink);border-radius:8px;padding:6px 8px;background:var(--card);font-weight:600;font-size:14px;color:var(--ink)}
+
+/* home hero */
+.hero{padding:44px 0 26px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.18em;color:var(--green);margin-bottom:10px}
+.hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(42px,9vw,72px);line-height:.95;letter-spacing:-.01em}
+.hero p{margin-top:14px;max-width:520px;color:var(--ink2);font-size:17px}
+.hero .cta{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* ledger index of days */
+.unitlabel{display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 10px;flex-wrap:wrap;gap:6px}
+.unitlabel h2{font-family:var(--disp);font-weight:800;font-size:22px}
+.unitlabel span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink2)}
+.ledger{border-top:2px solid var(--ink)}
+.lrow{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--rule);cursor:pointer;background:transparent;transition:background .12s}
+.lrow:hover{background:#EDEFE3}
+.lrow .dnum{font-family:var(--mono);font-weight:600;font-size:12px;color:var(--ink2);letter-spacing:.06em}
+.lrow .dtitle{font-weight:700;font-size:16px}
+.lrow .dsub{font-family:var(--mono);font-size:10.5px;color:var(--ink2);letter-spacing:.04em;margin-top:2px}
+.lrow .dstat{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+.done .dstat{color:var(--green);font-weight:600}
+.lockedrow{opacity:.45;cursor:default}
+
+/* generic card + lesson layout */
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:22px;margin:16px 0;box-shadow:3px 3px 0 rgba(24,34,25,.12)}
+.card h3{font-family:var(--disp);font-weight:800;font-size:20px;margin-bottom:10px}
+.card p{margin:8px 0;font-size:16.5px}
+.card p.big{font-size:19px;font-weight:600}
+.klist{margin:10px 0 4px 0;padding-left:0;list-style:none}
+.klist li{padding:7px 0 7px 26px;position:relative;font-size:16.5px}
+.klist li::before{content:"";position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:2px;background:var(--green)}
+.term{background:var(--green-soft);border-radius:4px;padding:1px 6px;font-weight:700}
+.money{font-family:var(--mono);font-weight:600;white-space:nowrap}
+
+/* lesson header + progress */
+.lhead{padding:26px 0 8px}
+.lhead .eyebrow{margin-bottom:6px}
+.lhead h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,6vw,44px);line-height:1}
+.teks{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1px solid var(--ink);border-radius:999px;padding:4px 10px;color:var(--ink2)}
+.steps{display:flex;gap:4px;margin:18px 0 4px;flex-wrap:wrap}
+.stepdot{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding:5px 10px;border-radius:999px;border:1.5px solid var(--rule);color:var(--ink2);background:var(--card)}
+.stepdot.now{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.stepdot.past{border-color:var(--green);color:var(--green)}
+.secbar{display:flex;align-items:center;gap:10px;margin:26px 0 4px}
+.secbar h2{font-family:var(--disp);font-weight:800;font-size:24px}
+.secbar .mins{font-family:var(--mono);font-size:11px;color:var(--ink2);letter-spacing:.1em}
+
+/* buttons */
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-weight:700;font-size:15px;padding:11px 20px;border-radius:10px;transition:transform .08s}
+.btn:active{transform:translateY(1px)}
+.btn.green{background:var(--green);border-color:var(--green)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:7px 14px;font-size:13.5px}
+.btn:disabled{opacity:.4;cursor:default}
+.btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+
+/* question blocks */
+.q{margin:14px 0 4px;font-weight:700;font-size:16.5px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{border:1.5px solid var(--ink);border-radius:10px;background:var(--card);padding:11px 14px;text-align:left;font-size:15.5px;font-weight:600;color:var(--ink);transition:background .1s}
+.opt:hover{background:#F0F2E8}
+.opt.right{background:var(--green-soft);border-color:var(--green);color:var(--green-deep)}
+.opt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.opt:disabled{cursor:default}
+.fb{margin-top:10px;font-weight:600;font-size:14.5px}
+.fb.ok{color:var(--green-deep)}
+.fb.no{color:var(--red)}
+.hint{margin-top:8px;font-size:14px;color:var(--ink2);border-left:3px solid var(--gold);padding-left:10px}
+
+/* sort game */
+.chipbank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{border:1.5px solid var(--ink);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14.5px;color:var(--ink)}
+.chip.gone{display:none}
+.buckets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.buckets{grid-template-columns:1fr}}
+.bucket{border:2px dashed var(--ink2);border-radius:12px;min-height:86px;padding:10px}
+.bucket h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2);margin-bottom:6px}
+.bucket .placed{display:flex;flex-wrap:wrap;gap:6px}
+.placed span{font-size:13px;font-weight:600;border-radius:999px;padding:4px 10px}
+.placed span.ok{background:var(--green-soft);color:var(--green-deep)}
+.placed span.no{background:var(--red-soft);color:var(--red);text-decoration:line-through}
+.sortnow{border:2px solid var(--ink);border-radius:12px;padding:16px;text-align:center;margin:12px 0;background:#FBFBF6}
+.sortnow .item{font-family:var(--disp);font-weight:800;font-size:22px}
+.sortnow .val{font-family:var(--mono);font-weight:600;color:var(--ink2);margin-top:2px}
+.bucketbtns{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.score{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink2);margin-top:10px}
+.streak{color:var(--gold);font-weight:600}
+
+/* numeric input */
+.numrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.numrow .dollar{font-family:var(--mono);font-weight:600;font-size:18px}
+.numin{border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-weight:600;font-size:17px;width:150px;background:var(--card);color:var(--ink)}
+.numin:focus{outline:3px solid var(--green-soft)}
+
+/* transaction picker */
+.txcard{border:1.5px solid var(--ink);border-radius:12px;padding:16px;margin:14px 0;background:#FBFBF6}
+.txcard .txd{font-weight:700;font-size:16px}
+.txcard .txm{font-family:var(--mono);color:var(--green-deep);font-weight:600}
+.pickrow{margin-top:12px}
+.pickrow h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;margin-bottom:6px;color:var(--ink2)}
+.acctchips{display:flex;flex-wrap:wrap;gap:7px}
+.acct{border:1.5px solid var(--ink2);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.acct.selup{background:var(--green);border-color:var(--green);color:#fff}
+.acct.seldn{background:var(--red);border-color:var(--red);color:#fff}
+.acct.none{border-style:dashed}
+
+/* ledger record box */
+.record{position:relative;border:1.5px solid var(--green-deep);border-radius:12px;margin:18px 0;padding:16px 16px 16px 42px;background:
+  repeating-linear-gradient(180deg,#FDFDF8 0px,#FDFDF8 27px,#E7ECDC 28px);overflow:hidden}
+.record::before{content:"";position:absolute;top:0;bottom:0;left:28px;width:2px;background:var(--red)}
+.record h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--green-deep);margin-bottom:6px}
+.record .rline{font-family:var(--mono);font-weight:600;font-size:14.5px;line-height:28px;color:var(--ink)}
+
+/* stamp */
+.stampwrap{position:relative;min-height:120px;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.stamp{font-family:var(--disp);font-weight:800;letter-spacing:.08em;font-size:30px;color:var(--green);border:4px solid var(--green);border-radius:10px;padding:10px 22px;transform:rotate(-7deg);opacity:0}
+.stamp.red{color:var(--red);border-color:var(--red)}
+.stamp.show{animation:slam .45s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes slam{0%{opacity:0;transform:rotate(-7deg) scale(2.4)}70%{opacity:1;transform:rotate(-7deg) scale(.94)}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.stamp.show{animation:none;opacity:1}}
+
+/* business cards */
+.bizgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+@media(max-width:600px){.bizgrid{grid-template-columns:1fr}}
+.bizcard{border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:16px;position:relative;box-shadow:3px 3px 0 rgba(24,34,25,.12)}
+.bizcard.taken{outline:3px solid var(--green)}
+.mono{font-family:var(--mono)}
+.mchip{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:17px;color:#fff;margin-bottom:10px}
+.bizcard h3{font-family:var(--disp);font-weight:800;font-size:18px}
+.bizcard .who{font-size:13.5px;color:var(--ink2);font-weight:600;margin-top:2px}
+.bizcard .tag{font-size:14px;margin-top:8px}
+.bizcard .price{font-family:var(--mono);font-size:12.5px;margin-top:8px;color:var(--green-deep);font-weight:600}
+.grouptag{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:var(--green);color:#fff;border-radius:999px;padding:4px 10px;font-weight:600}
+.drawpanel{border:2px solid var(--ink);border-radius:14px;padding:20px;margin-top:20px;background:var(--card);text-align:center}
+.drawpanel h3{font-family:var(--disp);font-weight:800;font-size:22px}
+.hl{outline:3px solid var(--gold)}
+
+/* exit / results */
+.result{border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);padding:26px;text-align:center;margin:18px 0}
+.result .bignum{font-family:var(--disp);font-weight:800;font-size:56px;line-height:1}
+.result .sub{font-family:var(--mono);font-size:12px;letter-spacing:.12em;margin-top:8px;color:#C9D2C6}
+.result .bizline{margin-top:10px;font-weight:600}
+
+.footer{border-top:2px solid var(--ink);margin-top:40px;padding:18px 0;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.footer button{background:none;border:none;color:var(--ink2);font-family:var(--mono);font-size:11px;text-decoration:underline;padding:0}
+.tnote{font-size:14.5px;color:var(--ink2);margin:8px 0}
+.warnpick{border:2px solid var(--gold);background:#FBF4DF;border-radius:12px;padding:14px 16px;margin:14px 0;font-weight:600}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.resultform{margin-top:16px;text-align:left}
+.resultform label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#C9D2C6;display:block;margin-bottom:4px}
+.namein{width:100%;max-width:320px;border:2px solid var(--paper);border-radius:8px;padding:9px 11px;font-weight:600;font-size:15px;background:#fff;color:var(--ink)}
+.copyta{width:100%;margin-top:12px;border:1.5px solid #5A665B;border-radius:8px;background:#0F1710;color:#D9E2D6;font-family:var(--mono);font-size:12px;line-height:1.5;padding:10px;resize:none}
+.fslink{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1.5px solid var(--ink);border-radius:999px;padding:5px 10px;background:transparent;color:var(--ink);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <div class="brand" onclick="go('#/')">PAYDAY<small>FINANCIAL MATH</small></div>
+    <nav>
+      <button class="navbtn" id="nav-days" onclick="go('#/')">Days</button>
+      <button class="navbtn" id="nav-biz" onclick="go('#/biz')">Businesses</button>
+    </nav>
+    <div class="bizpick">
+      <label for="bizsel">YOUR BUSINESS</label>
+      <select id="bizsel" onchange="setBiz(this.value)"></select>
+    </div>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<script>
+/* ================= COURSE ================= */
+var COURSE={
+key:"fm_",
+brand:"PAYDAY",
+heroEyebrow:"FINANCIAL MATH &middot; MONEY IN",
+heroTitle:"PAYDAY",
+heroTag:"Your money. Do the math. This week: how pay actually works, from the hourly wage to what hits your account.",
+startLabel:"Start Day 1",
+browseLabel:"See the jobs",
+unitTitle:"Week 1 &middot; Money In",
+unitMeta:"5 DAYS",
+nextUnit:{num:"DAY 6+",t:"Week 2 &middot; Banking",sub:"COMING NEXT"},
+dayEyebrow:"WEEK 1",
+pickLabel:"YOUR JOB",
+pickWarn:"Pick your job at the top of the screen to keep going.",
+entWord:"Job",
+entitiesEyebrow:"EIGHT JOBS &middot; ONE DRAW",
+entitiesTitle:"The Jobs",
+drawCopy:"Your teacher taps the button. The wheel hands your group a job. No trades.",
+resultNote:"Paste the block into today's Canvas assignment before the bell.",
+footer:"ALIGNED TO 19 TAC &sect;130.180, FINANCIAL MATHEMATICS",
+mapTitle:"Week 1 map",
+teacher:[
+{h:"Every day, same shape. 45 minutes.",ps:[
+"Warm-Up 5 &middot; Learn 12 &middot; Practice 10 &middot; Your Job 13 &middot; Exit 5. Blocks unlock in order. Nothing skips.",
+"Every calculation in Your Job runs on that group's assigned wage and hours, so answers differ across the room."]},
+{h:"The Canvas loop",ps:[
+"Create one text-entry assignment per day. Students type their name on the result screen, tap Copy for Canvas, and paste the block in.",
+"The block carries the day, job, first-try score, date, and a code tied to those exact details. A changed score or name breaks the code.",
+"Nothing saves to a server. The Canvas paste is the record."]},
+{h:"Setup, one time",ps:[
+"Day 1: run the Draw on the Jobs page in front of the class, one tap per group. Write the results on the board.",
+"Each student selects the group's job from the dropdown at the top on every device, every day.",
+"Calculators allowed all week. The math is multiplication and percent. The win is knowing which numbers to use."]},
+{h:"About the tax numbers",ps:[
+"Social Security is 6.2 percent and Medicare is 1.45 percent. Federal income tax really comes from IRS tables and the W-4. This week uses a flat 10 percent for practice, and the lessons say so."]}]
+};
+
+/* ================= DATA: JOBS ================= */
+var BIZ=[
+{id:"guard",name:"Lifeguard, Splash Cove Pool",owner:"",hue:203,does:"Watches the water and keeps swimmers safe.",price:"$12.00 per hour",wage:12,h1:20,oth:44},
+{id:"cashier",name:"Cashier, Big Basket Grocery",owner:"",hue:15,does:"Rings up groceries and handles cash and cards.",price:"$14.00 per hour",wage:14,h1:20,oth:45},
+{id:"lawn",name:"Lawn Crew, Green Line Landscaping",owner:"",hue:145,does:"Mows, edges, and loads the trailer.",price:"$15.00 per hour",wage:15,h1:16,oth:46},
+{id:"picker",name:"Picker, Redline Warehouse",owner:"",hue:265,does:"Pulls orders and stages them for shipping.",price:"$16.00 per hour",wage:16,h1:20,oth:48},
+{id:"blend",name:"Smoothie Maker, Peak Blends",owner:"",hue:315,does:"Blends orders and keeps the bar stocked.",price:"$12.50 per hour",wage:12.5,h1:16,oth:42},
+{id:"usher",name:"Usher, Starlight Cinema",owner:"",hue:35,does:"Scans tickets and keeps theaters clean.",price:"$13.00 per hour",wage:13,h1:20,oth:43},
+{id:"dogs",name:"Dog Handler, Happy Tails Daycare",owner:"",hue:175,does:"Runs play groups and feeds the dogs.",price:"$10.00 per hour",wage:10,h1:18,oth:41},
+{id:"ref",name:"Youth Referee, Metro Sports League",owner:"",hue:52,does:"Calls weekend games for youth leagues.",price:"$18.00 per hour",wage:18,h1:10,oth:44}
+];
+
+/* derived pay math */
+function r2(n){return Math.round(n*100)/100}
+function g1(b){return r2(b.wage*b.h1)}
+function otr(b){return r2(b.wage*1.5)}
+function otg(b){return r2(b.wage*40+otr(b)*(b.oth-40))}
+function fit(b){return r2(g1(b)*0.10)}
+function ssx(b){return r2(g1(b)*0.062)}
+function med(b){return r2(g1(b)*0.0145)}
+function netp(b){return r2(g1(b)-fit(b)-ssx(b)-med(b))}
+function sal40(b){return r2(b.wage*40)}
+function fm(n){var o={maximumFractionDigits:2};if(n%1!==0)o.minimumFractionDigits=2;return "$"+n.toLocaleString("en-US",o)}
+
+/* block constructors */
+function T(h,lines,check){return {t:"teach",h:h,lines:lines,check:check||null}}
+function Q(q,o,a,why){return {q:q,o:o,a:a,why:why||""}}
+function M(title,qs){return {t:"mcq",title:title,qs:qs}}
+function S(title,prompt,buckets,items){return {t:"sort",title:title,prompt:prompt,buckets:buckets,items:items}}
+function N(prompt,ans,why){return {t:"num",prompt:prompt,ans:ans,why:why||""}}
+function TXB(title,txs,note){return {t:"tx",title:title,txs:txs,note:note||""}}
+function R(lines){return {t:"record",lines:lines}}
+function P(txt){return {t:"note",txt:txt}}
+function STAMP(label){return {t:"stamp",label:label}}
+
+function priceOpts(b){var o=[b.price];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.price)});return o}
+function hourOpts(b){var o=[b.h1+" hours"];BIZ.forEach(function(x){if(x.id!==b.id&&x.h1!==b.h1&&o.indexOf(x.h1+" hours")<0&&o.length<4)o.push(x.h1+" hours")});while(o.length<4)o.push((b.h1+7)+" hours");return o}
+
+/* ================= DATA: LESSONS ================= */
+var LESSONS=[
+/* ---------- DAY 1 ---------- */
+{n:1,title:"Money In",teks:"130.180(c)(2), (c)(4)",
+ secs:[
+ {name:"Warm-Up",mins:5,blocks:[
+   M("One question to start.",[
+     Q("You work 12 hours at $10 an hour. What did you earn before taxes?",
+       ["$100","$120","$1,200","$22"],1,"Pay is wage times hours. 10 times 12.")])]},
+ {name:"Learn",mins:12,blocks:[
+   T("This class is about your money.",[
+     "Money you earn. Money you spend. Money you keep.",
+     "Every unit runs on real math you will use for the rest of your life.",
+     "First up: getting paid."]),
+   T("Hourly pay is wage times hours.",[
+     "Wage: what you earn for one hour.",
+     "Hours: how long you worked.",
+     "Pay = wage times hours. $12 an hour for 5 hours is $60."],
+     Q("You earn $15 an hour and work 8 hours. Pay before taxes:",
+       ["$90","$105","$120","$158"],2,"15 times 8.")),
+   T("Before taxes.",[
+     "Wage times hours gives gross pay. The full amount you earned.",
+     "It is not what lands in your account. Deductions come out first.",
+     "That math comes Thursday. Gross first."],
+     Q("Pay before anything is taken out is called",
+       ["net pay","gross pay","bonus pay","take-home pay"],1))]},
+ {name:"Practice",mins:10,blocks:[
+   N("Wage $11 an hour. 10 hours. Gross pay:",110,"11 times 10."),
+   N("Wage $14 an hour. 25 hours. Gross pay:",350,"14 times 25."),
+   N("Wage $9.50 an hour. 20 hours. Gross pay:",190,"9.50 times 20."),
+   N("Wage $16 an hour. 32 hours. Gross pay:",512,"16 times 32.")]},
+ {name:"Your Job",mins:13,blocks:[
+   P("Your teacher runs the draw on the Jobs page. Once your group has its job, select it at the top of this screen."),
+   function(b){return T(b.name,[
+     "What you do: "+b.does,
+     "Pay: "+b.price+".",
+     "A normal week: "+b.h1+" hours."])},
+   function(b){return M("Know your job.",[
+     Q("What does your job pay?",priceOpts(b),0),
+     Q("A normal week at your job is",hourOpts(b),0)])},
+   function(b){return N("Gross pay for a normal week at your job. "+fm(b.wage)+" times "+b.h1+" hours:",g1(b),
+     fm(b.wage)+" times "+b.h1+".")}]},
+ {name:"Exit",mins:5,blocks:[
+   M("Three questions. Then copy your result for Canvas.",[
+     Q("Gross pay is",["the full amount earned before anything comes out","what lands in your account","pay after taxes","a bonus"],0),
+     Q("Hourly pay is",["wage times hours","wage plus hours","hours divided by wage","a set yearly amount"],0),
+     Q("$13 an hour for 10 hours. Gross pay:",["$103","$130","$1,300","$23"],1)])]}]},
+
+/* ---------- DAY 2 ---------- */
+{n:2,title:"Overtime",teks:"130.180(c)(2), (c)(4)",
+ secs:[
+ {name:"Warm-Up",mins:5,blocks:[
+   M("Review from Day 1.",[
+     Q("Hourly pay is",["wage times hours","wage plus tips","a yearly salary","hours minus taxes"],0),
+     Q("$12 an hour for 20 hours. Gross:",["$32","$240","$2,400","$120"],1),
+     Q("Gross pay means",["pay after deductions","the full amount before anything comes out","only cash tips","pay for gross jobs"],1)])]},
+ {name:"Learn",mins:12,blocks:[
+   T("The 40-hour line.",[
+     "Work more than 40 hours in one week and the extra hours pay more.",
+     "That is overtime. Federal law for most hourly jobs.",
+     "Hours 1 to 40: normal wage. Every hour past 40: more."],
+     Q("Overtime starts after",["20 hours","30 hours","40 hours","50 hours"],2)),
+   T("Time and a half.",[
+     "Overtime rate = wage times 1.5.",
+     "$10 an hour becomes $15.",
+     "$14 an hour becomes $21."],
+     Q("Your wage is $12. Your overtime rate:",["$6","$12","$18","$24"],2,"12 times 1.5.")),
+   T("Split the week to compute it.",[
+     "First 40 hours at the normal rate.",
+     "Extra hours at the overtime rate.",
+     "Add the two totals. That is the gross."])]},
+ {name:"Practice",mins:10,blocks:[
+   N("Wage $10. Overtime rate:",15,"10 times 1.5."),
+   N("Wage $20. You work 44 hours. The first 40 hours pay $800. The 4 overtime hours pay:",120,"Overtime rate is 30. 30 times 4."),
+   N("Total gross for that 44-hour week:",920,"800 plus 120."),
+   N("Wage $16. You work 45 hours. Gross for the week:",760,"640 for the first 40. Overtime rate 24 times 5 hours is 120. 640 plus 120.")]},
+ {name:"Your Job",mins:13,blocks:[
+   function(b){return N("Your overtime rate. "+fm(b.wage)+" times 1.5:",otr(b),fm(b.wage)+" times 1.5.")},
+   function(b){return N("Big week. You work "+b.oth+" hours. Gross:",otg(b),
+     "First 40 at "+fm(b.wage)+" is "+fm(r2(b.wage*40))+". Then "+(b.oth-40)+" hours at "+fm(otr(b))+" is "+fm(r2(otr(b)*(b.oth-40)))+". Add them.")},
+   function(b){return M("Holiday pay.",[
+     Q("Your boss pays double time on Labor Day. Your rate that day:",
+       [fm(r2(b.wage*2)),fm(b.wage),fm(otr(b)),fm(r2(b.wage+2))],0,"Double time is wage times 2.")])}]},
+ {name:"Exit",mins:5,blocks:[
+   M("Three questions. Then copy your result for Canvas.",[
+     Q("Time and a half means",["wage times 1.5","wage times 2","half your wage","90 minutes of pay"],0),
+     Q("Wage $14. Overtime rate:",["$16","$19","$21","$28"],2),
+     Q("A 43-hour week is paid as",["43 hours at the normal rate","40 at normal rate plus 3 at the overtime rate","43 at the overtime rate","40 hours only"],1)])]}]},
+
+/* ---------- DAY 3 ---------- */
+{n:3,title:"Ways to Get Paid",teks:"130.180(c)(2), (c)(4)",
+ secs:[
+ {name:"Warm-Up",mins:5,blocks:[
+   M("Review from Day 2.",[
+     Q("Overtime starts after",["25 hours","40 hours in a week","8 hours in a day for everyone","never"],1),
+     Q("Wage $18. Overtime rate:",["$20","$24","$27","$36"],2),
+     Q("A 46-hour week splits into",["46 normal hours","40 normal plus 6 overtime","23 and 23","40 overtime plus 6 normal"],1)])]},
+ {name:"Learn",mins:12,blocks:[
+   T("Salary.",[
+     "A set amount for the year, split across paychecks.",
+     "$52,000 a year paid weekly is 52,000 divided by 52. $1,000 a week.",
+     "Most salaried jobs do not pay overtime."],
+     Q("A salary is",["a set yearly amount split across paychecks","hourly pay","tips only","a one-time bonus"],0)),
+   T("Commission.",[
+     "A percent of what you sell.",
+     "5 percent commission on $2,000 of sales is $100.",
+     "Common in car sales, real estate, and retail."],
+     Q("6 percent commission on $3,000 of sales:",["$18","$60","$180","$300"],2,"0.06 times 3,000.")),
+   T("Tips and piece rate.",[
+     "Tips: customers add money on top of a base wage. Servers, valets, delivery.",
+     "Piece rate: paid per item finished, not per hour.",
+     "Different jobs, different math. Same question every time: what is the gross."])]},
+ {name:"Practice",mins:10,blocks:[
+   N("Salary $41,600 a year, paid weekly. One paycheck:",800,"41,600 divided by 52."),
+   N("Salary $60,000 a year, paid monthly. One paycheck:",5000,"60,000 divided by 12."),
+   N("4 percent commission on $5,500 in sales:",220,"0.04 times 5,500."),
+   N("Base pay $80 plus $65 in tips. Gross for the shift:",145,"80 plus 65.")]},
+ {name:"Your Job",mins:13,blocks:[
+   function(b){return M("Your pay type.",[
+     Q("Your job pays",["an hourly wage","a yearly salary","commission only","tips only"],0,"Your job is hourly. "+b.price+".")])},
+   function(b){return N("A full-time offer at your wage: "+fm(b.wage)+" an hour, 2,080 hours a year, paid over 52 weeks. Weekly paycheck:",sal40(b),
+     "That works out to "+fm(b.wage)+" times 40 hours.")},
+   function(b){return M("Compare.",[
+     Q("Would that full-time week beat your normal "+b.h1+"-hour week gross?",
+       ["Yes. 40 paid hours beats my normal week.","No. My normal week pays more."],0,
+       "Full-time is "+fm(sal40(b))+". Your normal week is "+fm(g1(b))+".")])}]},
+ {name:"Exit",mins:5,blocks:[
+   M("Three questions. Then copy your result for Canvas.",[
+     Q("Salary $31,200 paid weekly. One paycheck:",["$600","$310","$1,200","$2,600"],0),
+     Q("Commission means",["a percent of what you sell","a set yearly amount","pay per hour","overtime pay"],0),
+     Q("A server's gross for a shift is",["tips only","base pay only","base pay plus tips","whatever the manager says"],2)])]}]},
+
+/* ---------- DAY 4 ---------- */
+{n:4,title:"Gross to Net",teks:"130.180(c)(3), (c)(4)",
+ secs:[
+ {name:"Warm-Up",mins:5,blocks:[
+   M("Review from Day 3.",[
+     Q("Salary $52,000 paid weekly. One paycheck:",["$520","$1,000","$4,333","$2,000"],1),
+     Q("5 percent commission on $4,000:",["$20","$200","$2,000","$500"],1),
+     Q("Gross pay is",["the full amount earned","pay after taxes","tips only","your savings"],0)])]},
+ {name:"Learn",mins:12,blocks:[
+   T("Gross is not what you get.",[
+     "Gross pay: everything you earned.",
+     "Net pay: what actually lands in your account.",
+     "The difference is deductions."],
+     Q("Net pay is",["what lands in your account after deductions","the full amount earned","a yearly bonus","your wage times 1.5"],0)),
+   T("The three standard bites.",[
+     "Federal income tax. The real amount comes from IRS tables and your W-4. This class practices with a flat 10 percent.",
+     "Social Security: 6.2 percent of gross.",
+     "Medicare: 1.45 percent of gross."],
+     Q("Social Security takes",["10 percent","6.2 percent","1.45 percent","25 percent"],1)),
+   T("Net pay math.",[
+     "Start with gross.",
+     "Subtract each deduction.",
+     "What is left is net. Your take-home."])]},
+ {name:"Practice",mins:10,blocks:[
+   N("Gross $500. Federal income tax at 10 percent:",50,"0.10 times 500."),
+   N("Gross $500. Social Security at 6.2 percent:",31,"0.062 times 500."),
+   N("Gross $500. Medicare at 1.45 percent:",7.25,"0.0145 times 500."),
+   N("Net pay for that $500 check:",411.75,"500 minus 50 minus 31 minus 7.25.")]},
+ {name:"Your Job",mins:13,blocks:[
+   function(b){return P("Your normal week gross is "+fm(g1(b))+". Run the deductions.")},
+   function(b){return N("Federal income tax at 10 percent:",fit(b),"0.10 times "+fm(g1(b))+".")},
+   function(b){return N("Social Security at 6.2 percent:",ssx(b),"0.062 times "+fm(g1(b))+".")},
+   function(b){return N("Medicare at 1.45 percent:",med(b),"0.0145 times "+fm(g1(b))+".")},
+   function(b){return N("Your net pay for the week:",netp(b),
+     fm(g1(b))+" minus "+fm(fit(b))+" minus "+fm(ssx(b))+" minus "+fm(med(b))+".")}]},
+ {name:"Exit",mins:5,blocks:[
+   M("Three questions. Then copy your result for Canvas.",[
+     Q("Which is bigger?",["Net pay","Gross pay","They are always equal","Depends on the month"],1),
+     Q("Medicare takes",["6.2 percent","10 percent","1.45 percent","0 percent"],2),
+     Q("You budget with",["gross pay, the bigger number","net pay, the money that actually arrives","your wage only","your W-4"],1)])]}]},
+
+/* ---------- DAY 5 ---------- */
+{n:5,title:"Paycheck Check",teks:"130.180(c)(2), (c)(4), (c)(1)",
+ secs:[
+ {name:"Warm-Up",mins:5,blocks:[
+   M("Last review before the check.",[
+     Q("Overtime rate is",["wage times 1.5","wage times 3","half the wage","wage plus 5"],0),
+     Q("Net pay is",["gross minus deductions","gross plus deductions","tips only","the same as gross"],0)])]},
+ {name:"Paycheck Check",mins:35,blocks:[
+   T("Prove it.",[
+     "Eight questions. All on your job.",
+     "First try counts. Slow down and think.",
+     "Copy your result for Canvas at the end."]),
+   function(b){return M("Know your numbers.",[
+     Q("Your overtime rate:",[fm(otr(b)),fm(b.wage),fm(r2(b.wage*2)),fm(r2(otr(b)+1))],0),
+     Q("Gross pay is",["the full amount before deductions","take-home pay","tips only","pay after Social Security"],0)])},
+   function(b){return N("Gross for a normal "+b.h1+"-hour week:",g1(b),fm(b.wage)+" times "+b.h1+".")},
+   function(b){return N("Gross for a "+b.oth+"-hour week:",otg(b),
+     "40 hours at "+fm(b.wage)+", then "+(b.oth-40)+" hours at "+fm(otr(b))+".")},
+   function(b){return N("Social Security on your normal week:",ssx(b),"0.062 times "+fm(g1(b))+".")},
+   function(b){return N("Your net pay for a normal week:",netp(b),
+     "Gross minus 10 percent, minus 6.2 percent, minus 1.45 percent.")},
+   M("Two more.",[
+     Q("Overtime starts after",["32 hours","36 hours","40 hours","44 hours"],2),
+     Q("The money you can actually spend each week is your",["gross","net","wage","commission"],1)]),
+   STAMP("PAID"),
+   P("Type your name on the result screen and copy the block into today's Canvas assignment.")]}]}
+];
+
+/* ================= DAYS (merge map) ================= */
+var DAYS=[
+{n:1,title:"Money In",teks:"130.180(c)(2), (c)(4)",parts:[0]},
+{n:2,title:"Overtime",teks:"130.180(c)(2), (c)(4)",parts:[1]},
+{n:3,title:"Ways to Get Paid",teks:"130.180(c)(2), (c)(4)",parts:[2]},
+{n:4,title:"Gross to Net",teks:"130.180(c)(3), (c)(4)",parts:[3]},
+{n:5,title:"Paycheck Check",teks:"130.180(c)(2), (c)(4), (c)(1)",parts:[4]}
+];
+
+/* ================= ENGINE ================= */
+function lsGet(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var KP=COURSE.key;
+var state={biz:lsGet(KP+"biz")||"",groups:lsGet(KP+"groups")||{},done:lsGet(KP+"done")||{}};
+var cur={li:-1,sec:0,blk:0,secNode:null,q:0,first:0,warn:false};
+
+function scrollTo_(n){try{if(n&&n.scrollIntoView)n.scrollIntoView({behavior:"smooth",block:"center"})}catch(e){}}
+function curBiz(){for(var i=0;i<BIZ.length;i++){if(BIZ[i].id===state.biz)return BIZ[i]}return null}
+function go(h){if(location.hash===h){route()}else{location.hash=h}}
+function el(tag,cls,html){var d=document.createElement(tag);if(cls)d.className=cls;if(html!==undefined)d.innerHTML=html;return d}
+function shuf(a){var c=a.slice();for(var i=c.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=c[i];c[i]=c[j];c[j]=t}return c}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function pad2(n){return (n<10?"0":"")+n}
+function mono(name){var w=name.split(" ");var a=w[0]?w[0][0]:"B";var b=w[1]?w[1][0]:"";return (a+b).toUpperCase()}
+function today(){return new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+
+function setBiz(id){state.biz=id;lsSet(KP+"biz",id);fillBizSel();
+  if(cur.warn){var w=document.getElementById("warnpick");if(w)w.remove();cur.warn=false;if(curBiz()){showBlock()}}}
+function fillBizSel(){var s=document.getElementById("bizsel");if(!s)return;var h='<option value="">Pick your business</option>';
+  BIZ.forEach(function(b){h+='<option value="'+b.id+'"'+(state.biz===b.id?" selected":"")+'>'+esc(b.name)+"</option>"});s.innerHTML=h}
+
+/* ---------- router ---------- */
+function route(){
+  var h=location.hash||"#/";
+  var v=document.getElementById("view");v.innerHTML="";
+  document.getElementById("nav-days").className="navbtn"+(h==="#/"?" on":"");
+  document.getElementById("nav-biz").className="navbtn"+(h==="#/biz"?" on":"");
+  if(h.indexOf("#/day/")===0){var n=parseInt(h.slice(6),10);if(n>=1&&n<=DAYS.length){renderLesson(n-1);return}}
+  if(h==="#/biz"){renderBiz();return}
+  if(h==="#/teacher"){renderTeacher();return}
+  renderHome();
+}
+
+/* ---------- home ---------- */
+function renderHome(){
+  var v=document.getElementById("view");
+  var hero=el("section","hero");
+  hero.appendChild(el("div","eyebrow",COURSE.heroEyebrow));
+  hero.appendChild(el("h1","",COURSE.heroTitle));
+  hero.appendChild(el("p","",COURSE.heroTag));
+  var cta=el("div","cta");
+  var b1=el("button","btn green",COURSE.startLabel);b1.onclick=function(){go("#/day/1")};
+  var b2=el("button","btn ghost",COURSE.browseLabel);b2.onclick=function(){go("#/biz")};
+  cta.appendChild(b1);cta.appendChild(b2);hero.appendChild(cta);v.appendChild(hero);
+  var ul=el("div","unitlabel");
+  ul.appendChild(el("h2","",COURSE.unitTitle));
+  ul.appendChild(el("span","",COURSE.unitMeta));
+  v.appendChild(ul);
+  var lg=el("div","ledger");
+  DAYS.forEach(function(D,i){
+    var r=el("div","lrow"+(state.done[i]?" done":""));
+    r.setAttribute("role","button");r.tabIndex=0;
+    var left=el("div","dnum","DAY "+pad2(D.n));
+    var mid=el("div","");
+    mid.appendChild(el("div","dtitle",esc(D.title)));
+    mid.appendChild(el("div","dsub","TEKS "+esc(D.teks)));
+    var st=state.done[i]?("&#10003; "+state.done[i].f+"/"+state.done[i].q+" FIRST TRY"):"OPEN";
+    var right=el("div","dstat",st);
+    r.appendChild(left);r.appendChild(mid);r.appendChild(right);
+    r.onclick=function(){go("#/day/"+D.n)};
+    r.onkeydown=function(e){if(e.key==="Enter")go("#/day/"+D.n)};
+    lg.appendChild(r);
+  });
+  if(COURSE.nextUnit){
+    var lock=el("div","lrow lockedrow");
+    lock.appendChild(el("div","dnum",COURSE.nextUnit.num));
+    var lm=el("div","");lm.appendChild(el("div","dtitle",COURSE.nextUnit.t));
+    lm.appendChild(el("div","dsub",COURSE.nextUnit.sub));
+    lock.appendChild(lm);lock.appendChild(el("div","dstat",""));
+    lg.appendChild(lock);
+  }
+  v.appendChild(lg);
+  addFooter(v);
+}
+
+function addFooter(v){
+  var f=el("div","footer");
+  f.appendChild(el("span","",COURSE.footer));
+  var right=el("span","");
+  var t=el("button","","Teacher");t.onclick=function(){go("#/teacher")};
+  var rs=el("button","","Reset progress");rs.style.marginLeft="14px";
+  rs.onclick=function(){if(confirm("Erase all saved progress on this device?")){state.done={};lsSet(KP+"done",state.done);route()}};
+  right.appendChild(t);right.appendChild(rs);
+  f.appendChild(right);v.appendChild(f);
+}
+
+/* ---------- businesses + draw ---------- */
+function renderBiz(){
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow",COURSE.entitiesEyebrow));
+  hd.appendChild(el("h1","",COURSE.entitiesTitle));
+  v.appendChild(hd);
+  var dp=el("div","drawpanel");
+  var assigned=Object.keys(state.groups).length;
+  var nextG=assigned+1;
+  dp.appendChild(el("h3","","The Draw"));
+  dp.appendChild(el("p","tnote",COURSE.drawCopy));
+  var db=el("button","btn green","Draw for Group "+nextG);
+  if(assigned>=BIZ.length){db.disabled=true;db.textContent="All businesses assigned"}
+  db.onclick=function(){runDraw(db)};
+  dp.appendChild(db);
+  var rl=el("button","btn ghost sm","Reset the draw");rl.style.marginLeft="10px";
+  rl.onclick=function(){if(confirm("Clear all group assignments?")){state.groups={};lsSet(KP+"groups",state.groups);renderBizGridOnly();route()}};
+  dp.appendChild(rl);
+  v.appendChild(dp);
+  var grid=el("div","bizgrid");grid.id="bizgrid";
+  v.appendChild(grid);
+  paintBizGrid();
+  addFooter(v);
+}
+function paintBizGrid(){
+  var grid=document.getElementById("bizgrid");if(!grid)return;grid.innerHTML="";
+  BIZ.forEach(function(b){
+    var c=el("div","bizcard"+(state.groups[b.id]?" taken":""));c.id="bc-"+b.id;
+    if(state.groups[b.id]){c.appendChild(el("div","grouptag","GROUP "+state.groups[b.id]))}
+    var m=el("div","mchip",mono(b.name));m.style.background="hsl("+b.hue+",45%,34%)";
+    c.appendChild(m);
+    c.appendChild(el("h3","",esc(b.name)));
+    if(b.owner)c.appendChild(el("div","who","Owner: "+esc(b.owner)));
+    c.appendChild(el("div","tag",esc(b.does)));
+    c.appendChild(el("div","price",esc(b.price)));
+    grid.appendChild(c);
+  });
+}
+function renderBizGridOnly(){paintBizGrid()}
+function runDraw(btn){
+  var open=BIZ.filter(function(b){return !state.groups[b.id]});
+  if(!open.length)return;
+  btn.disabled=true;
+  var pick=open[Math.floor(Math.random()*open.length)];
+  var ticks=0,max=14;
+  var iv=setInterval(function(){
+    BIZ.forEach(function(b){var n=document.getElementById("bc-"+b.id);if(n)n.classList.remove("hl")});
+    var flash=open[Math.floor(Math.random()*open.length)];
+    var fn=document.getElementById("bc-"+(ticks<max-1?flash.id:pick.id));
+    if(fn)fn.classList.add("hl");
+    ticks++;
+    if(ticks>=max){clearInterval(iv);
+      var g=Object.keys(state.groups).length+1;
+      state.groups[pick.id]=g;lsSet(KP+"groups",state.groups);
+      setTimeout(function(){route()},650);
+    }
+  },110);
+}
+
+/* ---------- lesson flow ---------- */
+function daySecs(D){
+  var out=[];
+  D.parts.forEach(function(pi,idx){
+    LESSONS[pi].secs.forEach(function(s){
+      if(idx>0&&s.name==="Warm-Up")return;
+      if(idx<D.parts.length-1&&s.name==="Exit")return;
+      out.push(s);
+    });
+  });
+  return out;
+}
+function renderLesson(li){
+  var D=DAYS[li];
+  cur={li:li,sec:0,blk:0,secNode:null,q:0,first:0,warn:false,secs:daySecs(D)};
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow",COURSE.dayEyebrow+" &middot; DAY "+pad2(D.n)));
+  hd.appendChild(el("h1","",esc(D.title)));
+  hd.appendChild(el("span","teks","TEKS "+esc(D.teks)));
+  var steps=el("div","steps");steps.id="stepdots";
+  cur.secs.forEach(function(s,i){steps.appendChild(el("span","stepdot"+(i===0?" now":""),esc(s.name.toUpperCase())))});
+  hd.appendChild(steps);
+  v.appendChild(hd);
+  var body=el("div","");body.id="lbody";v.appendChild(body);
+  startSection();
+}
+function updateDots(){
+  var dots=document.getElementById("stepdots");if(!dots)return;
+  dots.innerHTML="";
+  cur.secs.forEach(function(s,i){
+    var cls="stepdot"+(i<cur.sec?" past":(i===cur.sec?" now":""));
+    dots.appendChild(el("span",cls,esc(s.name.toUpperCase())));
+  });
+}
+function startSection(){
+  var s=cur.secs[cur.sec];
+  var body=document.getElementById("lbody");
+  var bar=el("div","secbar");
+  bar.appendChild(el("h2","",esc(s.name)));
+  bar.appendChild(el("span","mins","ABOUT "+s.mins+" MIN"));
+  body.appendChild(bar);
+  cur.secNode=el("div","");body.appendChild(cur.secNode);
+  updateDots();
+  showBlock();
+}
+function showBlock(){
+  var s=cur.secs[cur.sec];
+  var bl=s.blocks[cur.blk];
+  if(typeof bl==="function"){
+    var b=curBiz();
+    if(!b){
+      var w=el("div","warnpick",COURSE.pickWarn);
+      w.id="warnpick";cur.secNode.appendChild(w);cur.warn=true;
+      scrollTo_(w);return;
+    }
+    bl=bl(b);
+  }
+  var node=renderBlock(bl);
+  cur.secNode.appendChild(node);
+  scrollTo_(node);
+}
+function blockDone(){
+  var s=cur.secs[cur.sec];
+  cur.blk++;
+  if(cur.blk<s.blocks.length){showBlock();return}
+  cur.sec++;cur.blk=0;
+  if(cur.sec<cur.secs.length){startSection();return}
+  finishLesson();
+}
+function vcode(s){var h=5381;for(var i=0;i<s.length;i++){h=((h*33)^s.charCodeAt(i))>>>0}return ("0000"+h.toString(36).toUpperCase()).slice(-4)}
+function finishLesson(){
+  var D=DAYS[cur.li];
+  updateDots();
+  state.done[cur.li]={f:cur.first,q:cur.q,when:Date.now()};
+  lsSet(KP+"done",state.done);
+  var body=document.getElementById("lbody");
+  var r=el("div","result");
+  r.appendChild(el("div","sub","DAY "+pad2(D.n)+" COMPLETE"));
+  r.appendChild(el("div","bignum",cur.first+" / "+cur.q));
+  r.appendChild(el("div","sub","FIRST TRY"));
+  var b=curBiz();
+  r.appendChild(el("div","bizline",(b?esc(b.name)+" &middot; ":"")+today()));
+  var form=el("div","resultform");
+  var lab=el("label","","YOUR NAME");lab.htmlFor="rname";
+  var nameIn=el("input","namein");nameIn.id="rname";nameIn.type="text";nameIn.placeholder="First and last name";
+  var ta=el("textarea","copyta");ta.rows=7;ta.readOnly=true;
+  function block(){
+    var nm=nameIn.value.trim();
+    var sc=cur.first+"/"+cur.q;
+    var dt=today();
+    var ent=b?b.name:"none selected";
+    var code=vcode("GHS26|"+D.n+"|"+sc+"|"+dt+"|"+ent+"|"+nm.toLowerCase());
+    return COURSE.brand+" RESULT\nDay "+D.n+": "+D.title+"\nName: "+(nm||"____________")+"\n"+COURSE.entWord+": "+ent+"\nFirst try: "+sc+"\nDate: "+dt+"\nCode: "+code;
+  }
+  function refresh(){ta.value=block()}
+  nameIn.addEventListener("input",refresh);
+  refresh();
+  var fb=el("div","fb","");fb.style.marginTop="8px";
+  var copy=el("button","btn green","Copy for Canvas");copy.style.marginTop="12px";
+  copy.onclick=function(){
+    if(!nameIn.value.trim()){fb.className="fb no";fb.style.color="#F2B8AF";fb.textContent="Type your name first.";nameIn.focus();return}
+    refresh();
+    function okmsg(){fb.className="fb ok";fb.style.color="#9FD8B4";fb.textContent="Copied. Paste it into today's Canvas assignment."}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ta.value).then(okmsg,function(){ta.select();try{document.execCommand("copy")}catch(e){}okmsg()});
+    }else{ta.select();try{document.execCommand("copy")}catch(e){}okmsg()}
+  };
+  form.appendChild(lab);form.appendChild(nameIn);form.appendChild(ta);form.appendChild(copy);form.appendChild(fb);
+  r.appendChild(form);
+  r.appendChild(el("div","tnote",COURSE.resultNote));
+  var back=el("button","btn ghost","Back to Days");back.style.marginTop="10px";back.style.color="#fff";back.style.borderColor="#fff";
+  back.onclick=function(){go("#/")};
+  r.appendChild(back);
+  body.appendChild(r);
+  scrollTo_(r);
+}
+function scoreQ(firstTry){cur.q++;if(firstTry)cur.first++}
+
+/* ---------- block renderers ---------- */
+function renderBlock(bl){
+  if(bl.t==="teach")return rTeach(bl);
+  if(bl.t==="note")return rNote(bl);
+  if(bl.t==="mcq")return rMcq(bl);
+  if(bl.t==="sort")return rSort(bl);
+  if(bl.t==="num")return rNum(bl);
+  if(bl.t==="tx")return rTx(bl);
+  if(bl.t==="record")return rRecord(bl);
+  if(bl.t==="stamp")return rStamp(bl);
+  return el("div","","");
+}
+function contBtn(label){var b=el("button","btn","Continue");if(label)b.textContent=label;b.onclick=function(){b.disabled=true;blockDone()};return b}
+
+function rNote(bl){
+  var c=el("div","card");
+  c.appendChild(el("p","big",esc(bl.txt)));
+  var row=el("div","btnrow");row.appendChild(contBtn());c.appendChild(row);
+  return c;
+}
+function rTeach(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.h)));
+  var ul=el("ul","klist");
+  bl.lines.forEach(function(x){ul.appendChild(el("li","",esc(x)))});
+  c.appendChild(ul);
+  var row=el("div","btnrow");
+  var nx=contBtn("Next");
+  if(bl.check){
+    nx.disabled=true;
+    c.appendChild(qNode(bl.check,function(){nx.disabled=false}));
+  }
+  row.appendChild(nx);c.appendChild(row);
+  return c;
+}
+function qNode(q,onDone){
+  var wrap=el("div","");
+  wrap.appendChild(el("div","q",esc(q.q)));
+  var opts=el("div","opts");
+  var attempts=0,settled=false;
+  var options=shuf(q.o.map(function(t,i){return {t:t,ok:i===q.a}}));
+  var fb=el("div","fb");
+  options.forEach(function(o){
+    var b=el("button","opt",esc(o.t));
+    b.onclick=function(){
+      if(settled)return;
+      attempts++;
+      if(o.ok){
+        settled=true;b.classList.add("right");
+        fb.className="fb ok";fb.textContent=(attempts===1?"Right. First try.":"Right.")+(q.why?" "+q.why:"");
+        scoreQ(attempts===1);
+        Array.prototype.forEach.call(opts.children,function(x){x.disabled=true});
+        onDone();
+      }else{
+        b.classList.add("wrong");b.disabled=true;
+        fb.className="fb no";fb.textContent="Not that one.";
+        if(attempts===2&&q.why){
+          var h=el("div","hint",esc(q.why));wrap.appendChild(h);
+        }
+        if(attempts>=3){
+          settled=true;
+          options.forEach(function(oo,ii){if(oo.ok)opts.children[ii].classList.add("right")});
+          Array.prototype.forEach.call(opts.children,function(x){x.disabled=true});
+          fb.className="fb no";fb.textContent="Here is the right answer. Read it before moving on.";
+          scoreQ(false);
+          onDone();
+        }
+      }
+    };
+    opts.appendChild(b);
+  });
+  wrap.appendChild(opts);wrap.appendChild(fb);
+  return wrap;
+}
+function rMcq(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  var done=0;var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;
+  bl.qs.forEach(function(q){
+    c.appendChild(qNode(q,function(){done++;if(done===bl.qs.length)nx.disabled=false}));
+  });
+  row.appendChild(nx);c.appendChild(row);
+  return c;
+}
+function rSort(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  c.appendChild(el("p","",esc(bl.prompt)));
+  var items=shuf(bl.items);
+  var idx=0,streak=0,first=0;
+  var stage=el("div","sortnow");
+  var buckets=el("div","buckets");
+  var lists=[];
+  bl.buckets.forEach(function(bn){
+    var bu=el("div","bucket");bu.appendChild(el("h4","",esc(bn.toUpperCase())));
+    var pl=el("div","placed");bu.appendChild(pl);lists.push(pl);buckets.appendChild(bu);
+  });
+  var scoreLine=el("div","score","");
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);
+  function paint(){
+    if(idx>=items.length){
+      stage.innerHTML='<div class="item">Done.</div><div class="val">'+first+" of "+items.length+" on the first try.</div>";
+      nx.disabled=false;scoreLine.textContent="";return;
+    }
+    var it=items[idx];
+    stage.innerHTML='<div class="item">'+esc(it.t)+'</div>'+(it.v!==undefined?'<div class="val">'+fm(it.v)+"</div>":"");
+    var bb=el("div","bucketbtns");
+    bl.buckets.forEach(function(bn,bi){
+      var b=el("button","btn ghost sm",esc(bn));
+      b.onclick=function(){
+        var ok=(bi===it.b);
+        scoreQ(ok);
+        if(ok){first++;streak++;
+          var tag=el("span","ok",esc(it.t));lists[it.b].appendChild(tag);
+        }else{streak=0;
+          var tag2=el("span","no",esc(it.t));lists[it.b].appendChild(tag2);
+        }
+        scoreLine.innerHTML="SCORE "+first+"/"+items.length+(streak>1?' &middot; <span class="streak">STREAK &times;'+streak+"</span>":"");
+        idx++;paint();
+      };
+      bb.appendChild(b);
+    });
+    stage.appendChild(bb);
+  }
+  c.appendChild(stage);c.appendChild(buckets);c.appendChild(scoreLine);c.appendChild(row);
+  paint();
+  return c;
+}
+function rNum(bl){
+  var c=el("div","card");
+  c.appendChild(el("div","q",esc(bl.prompt)));
+  var nr=el("div","numrow");
+  nr.appendChild(el("span","dollar","$"));
+  var inp=el("input","numin");inp.type="text";inp.inputMode="numeric";inp.placeholder="0";
+  nr.appendChild(inp);
+  var ck=el("button","btn sm","Check");nr.appendChild(ck);
+  c.appendChild(nr);
+  var fb=el("div","fb");c.appendChild(fb);
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);c.appendChild(row);
+  var attempts=0,settled=false;
+  function submit(){
+    if(settled)return;
+    var raw=inp.value.replace(/[$,\s]/g,"");
+    if(raw==="")return;
+    var vnum=Number(raw);
+    attempts++;
+    if(Math.abs(vnum-bl.ans)<0.005){
+      settled=true;fb.className="fb ok";
+      fb.textContent=(attempts===1?"Right. First try.":"Right.")+(bl.why?" "+bl.why:"");
+      scoreQ(attempts===1);inp.disabled=true;ck.disabled=true;nx.disabled=false;
+    }else{
+      fb.className="fb no";fb.textContent="Not it. Check the math and try again.";
+      if(attempts===2&&bl.why){c.insertBefore(el("div","hint",esc(bl.why)),row)}
+      if(attempts>=3){
+        settled=true;fb.className="fb no";
+        fb.textContent="The answer is "+fm(bl.ans)+". "+(bl.why||"");
+        scoreQ(false);inp.disabled=true;ck.disabled=true;nx.disabled=false;
+      }
+    }
+  }
+  ck.onclick=submit;
+  inp.addEventListener("keydown",function(e){if(e.key==="Enter")submit()});
+  return c;
+}
+function rTx(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  if(bl.note)c.appendChild(el("p","tnote",esc(bl.note)));
+  var doneCount=0;
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);
+  bl.txs.forEach(function(tx){
+    c.appendChild(txCard(tx,function(){doneCount++;if(doneCount===bl.txs.length)nx.disabled=false}));
+  });
+  c.appendChild(row);
+  return c;
+}
+function txCard(tx,onDone){
+  var cap=tx.cap||"Owner, Capital";
+  var ACC=["Cash","Supplies","Equipment","Accounts Payable",cap];
+  var card=el("div","txcard");
+  card.appendChild(el("div","txd",esc(tx.d)));
+  var sel={up:{},dn:{}};
+  var attempts=0,settled=false;
+  function chipRow(label,key){
+    var pr=el("div","pickrow");
+    pr.appendChild(el("h5","",label));
+    var ch=el("div","acctchips");
+    ACC.forEach(function(a){
+      var b=el("button","acct",esc(a));
+      b.onclick=function(){
+        if(settled)return;
+        sel[key][a]=!sel[key][a];
+        if(sel[key][a]){b.classList.add(key==="up"?"selup":"seldn");sel[key]["__none__"]=false;
+          var nb=ch.querySelector(".none");if(nb)nb.classList.remove(key==="up"?"selup":"seldn");}
+        else{b.classList.remove("selup","seldn")}
+      };
+      ch.appendChild(b);
+    });
+    var nb=el("button","acct none","Nothing");
+    nb.onclick=function(){
+      if(settled)return;
+      var on=!sel[key]["__none__"];
+      ACC.forEach(function(a){sel[key][a]=false});
+      Array.prototype.forEach.call(ch.children,function(x){x.classList.remove("selup","seldn")});
+      sel[key]["__none__"]=on;
+      if(on)nb.classList.add(key==="up"?"selup":"seldn");
+    };
+    ch.appendChild(nb);
+    pr.appendChild(ch);
+    return pr;
+  }
+  var upRow=chipRow("WHAT GOES UP","up");
+  var dnRow=chipRow("WHAT GOES DOWN","dn");
+  card.appendChild(upRow);card.appendChild(dnRow);
+  var fb=el("div","fb");card.appendChild(fb);
+  var ck=el("button","btn sm","Check this one");ck.style.marginTop="12px";
+  card.appendChild(ck);
+  function picked(key){return ACC.filter(function(a){return sel[key][a]})}
+  function rowOK(key,ans){
+    var p=picked(key);
+    if(ans.length===0){return p.length===0&&sel[key]["__none__"]===true}
+    if(p.length!==ans.length)return false;
+    for(var i=0;i<ans.length;i++){if(p.indexOf(ans[i])<0)return false}
+    return true;
+  }
+  function reveal(){
+    ACC.forEach(function(a){sel.up[a]=tx.up.indexOf(a)>=0;sel.dn[a]=tx.down.indexOf(a)>=0});
+    sel.up["__none__"]=tx.up.length===0;sel.dn["__none__"]=tx.down.length===0;
+    [upRow,dnRow].forEach(function(rw,ri){
+      var key=ri===0?"up":"dn";var ans=ri===0?tx.up:tx.down;
+      Array.prototype.forEach.call(rw.querySelectorAll(".acct"),function(b){
+        b.classList.remove("selup","seldn");
+        var isNone=b.classList.contains("none");
+        var on=isNone?(ans.length===0):(ans.indexOf(b.textContent)>=0);
+        if(on)b.classList.add(key==="up"?"selup":"seldn");
+      });
+    });
+  }
+  ck.onclick=function(){
+    if(settled)return;
+    var upEmptyPick=picked("up").length===0&&!sel.up["__none__"];
+    var dnEmptyPick=picked("dn").length===0&&!sel.dn["__none__"];
+    if(upEmptyPick||dnEmptyPick){fb.className="fb no";fb.textContent="Make a pick in both rows. Tap Nothing if nothing moves.";return}
+    attempts++;
+    var u=rowOK("up",tx.up),d=rowOK("dn",tx.down);
+    if(u&&d){
+      settled=true;fb.className="fb ok";
+      fb.textContent=(attempts===1?"Right. First try. Both sides stay balanced.":"Right. Both sides stay balanced.");
+      scoreQ(attempts===1);ck.disabled=true;onDone();
+    }else{
+      fb.className="fb no";
+      fb.textContent=!u&&!d?"Look again at both rows.":(!u?"Look again at what goes up.":"Look again at what goes down.");
+      if(attempts>=3){
+        settled=true;reveal();
+        fb.className="fb no";fb.textContent="Here is the correct move. Study it before you continue.";
+        scoreQ(false);ck.disabled=true;onDone();
+      }
+    }
+  };
+  return card;
+}
+function rRecord(bl){
+  var c=el("div","record");
+  c.appendChild(el("h4","","RECORD THIS IN YOUR BOOKS"));
+  bl.lines.forEach(function(x){c.appendChild(el("div","rline",esc(x)))});
+  var b=el("button","btn green sm","Recorded in our Books");b.style.marginTop="10px";
+  b.onclick=function(){b.disabled=true;b.textContent="In the Books";blockDone()};
+  c.appendChild(b);
+  return c;
+}
+function rStamp(bl){
+  var c=el("div","card");
+  var w=el("div","stampwrap");
+  var s=el("div","stamp",esc(bl.label));
+  w.appendChild(s);c.appendChild(w);
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);c.appendChild(row);
+  setTimeout(function(){s.classList.add("show")},60);
+  setTimeout(function(){nx.disabled=false},700);
+  return c;
+}
+
+/* ---------- teacher ---------- */
+function renderTeacher(){
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow","FOR THE TEACHER"));
+  hd.appendChild(el("h1","","Run of Show"));
+  v.appendChild(hd);
+  COURSE.teacher.forEach(function(card){
+    var c=el("div","card");
+    c.appendChild(el("h3","",card.h));
+    card.ps.forEach(function(p){c.appendChild(el("p","",p))});
+    v.appendChild(c);
+  });
+  var c3=el("div","card");
+  c3.appendChild(el("h3","",COURSE.mapTitle));
+  DAYS.forEach(function(D){
+    c3.appendChild(el("p","","Day "+D.n+" &middot; "+esc(D.title)+" &middot; TEKS "+esc(D.teks)));
+  });
+  v.appendChild(c3);
+  addFooter(v);
+}
+
+/* ---------- boot ---------- */
+fillBizSel();
+try{
+  if(window.self!==window.top){
+    var nav=document.querySelector(".top nav");
+    if(nav){
+      var fl=document.createElement("a");
+      fl.className="fslink";fl.textContent="Full screen";
+      fl.href=window.location.href;fl.target="_blank";fl.rel="noopener";
+      nav.appendChild(fl);
+    }
+  }
+}catch(e){}
+window.addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>

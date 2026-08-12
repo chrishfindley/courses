@@ -1,0 +1,1604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Storefront · Virtual Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Mono:wght@500;600&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F5EE;
+  --card:#FFFFFF;
+  --rule:#DBDECB;
+  --ink:#182219;
+  --ink2:#4A5548;
+  --green:#1B7A4A;
+  --green-deep:#0C3B24;
+  --green-soft:#E4F0E7;
+  --red:#B23A2E;
+  --red-soft:#F7E7E4;
+  --gold:#C79A2A;
+  --disp:"Bricolage Grotesque",sans-serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font-family:var(--body);cursor:pointer}
+input,select{font-family:var(--body)}
+a{color:var(--green-deep)}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 80px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:2px solid var(--ink)}
+.topin{max-width:760px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:800;font-size:20px;letter-spacing:.02em;cursor:pointer;user-select:none}
+.brand small{display:block;font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.14em;color:var(--green)}
+.top nav{display:flex;gap:6px;margin-left:auto}
+.navbtn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:6px 12px;border-radius:999px;font-weight:600;font-size:13px}
+.navbtn.on{background:var(--ink);color:var(--paper)}
+.bizpick{display:flex;align-items:center;gap:8px;width:100%;padding-top:2px}
+.bizpick label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--ink2)}
+.bizpick select{flex:1;max-width:340px;border:1.5px solid var(--ink);border-radius:8px;padding:6px 8px;background:var(--card);font-weight:600;font-size:14px;color:var(--ink)}
+
+/* home hero */
+.hero{padding:44px 0 26px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.18em;color:var(--green);margin-bottom:10px}
+.hero h1{font-family:var(--disp);font-weight:800;font-size:clamp(42px,9vw,72px);line-height:.95;letter-spacing:-.01em}
+.hero p{margin-top:14px;max-width:520px;color:var(--ink2);font-size:17px}
+.hero .cta{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* ledger index of days */
+.unitlabel{display:flex;justify-content:space-between;align-items:baseline;padding:26px 0 10px;flex-wrap:wrap;gap:6px}
+.unitlabel h2{font-family:var(--disp);font-weight:800;font-size:22px}
+.unitlabel span{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink2)}
+.ledger{border-top:2px solid var(--ink)}
+.lrow{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--rule);cursor:pointer;background:transparent;transition:background .12s}
+.lrow:hover{background:#EDEFE3}
+.lrow .dnum{font-family:var(--mono);font-weight:600;font-size:12px;color:var(--ink2);letter-spacing:.06em}
+.lrow .dtitle{font-weight:700;font-size:16px}
+.lrow .dsub{font-family:var(--mono);font-size:10.5px;color:var(--ink2);letter-spacing:.04em;margin-top:2px}
+.lrow .dstat{font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+.done .dstat{color:var(--green);font-weight:600}
+.lockedrow{opacity:.45;cursor:default}
+
+/* generic card + lesson layout */
+.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:22px;margin:16px 0;box-shadow:3px 3px 0 rgba(24,34,25,.12)}
+.card h3{font-family:var(--disp);font-weight:800;font-size:20px;margin-bottom:10px}
+.card p{margin:8px 0;font-size:16.5px}
+.card p.big{font-size:19px;font-weight:600}
+.klist{margin:10px 0 4px 0;padding-left:0;list-style:none}
+.klist li{padding:7px 0 7px 26px;position:relative;font-size:16.5px}
+.klist li::before{content:"";position:absolute;left:4px;top:14px;width:10px;height:10px;border-radius:2px;background:var(--green)}
+.term{background:var(--green-soft);border-radius:4px;padding:1px 6px;font-weight:700}
+.money{font-family:var(--mono);font-weight:600;white-space:nowrap}
+
+/* lesson header + progress */
+.lhead{padding:26px 0 8px}
+.lhead .eyebrow{margin-bottom:6px}
+.lhead h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,6vw,44px);line-height:1}
+.teks{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1px solid var(--ink);border-radius:999px;padding:4px 10px;color:var(--ink2)}
+.steps{display:flex;gap:4px;margin:18px 0 4px;flex-wrap:wrap}
+.stepdot{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding:5px 10px;border-radius:999px;border:1.5px solid var(--rule);color:var(--ink2);background:var(--card)}
+.stepdot.now{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.stepdot.past{border-color:var(--green);color:var(--green)}
+.secbar{display:flex;align-items:center;gap:10px;margin:26px 0 4px}
+.secbar h2{font-family:var(--disp);font-weight:800;font-size:24px}
+.secbar .mins{font-family:var(--mono);font-size:11px;color:var(--ink2);letter-spacing:.1em}
+
+/* buttons */
+.btn{border:2px solid var(--ink);background:var(--ink);color:var(--paper);font-weight:700;font-size:15px;padding:11px 20px;border-radius:10px;transition:transform .08s}
+.btn:active{transform:translateY(1px)}
+.btn.green{background:var(--green);border-color:var(--green)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.sm{padding:7px 14px;font-size:13.5px}
+.btn:disabled{opacity:.4;cursor:default}
+.btnrow{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center}
+
+/* question blocks */
+.q{margin:14px 0 4px;font-weight:700;font-size:16.5px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{border:1.5px solid var(--ink);border-radius:10px;background:var(--card);padding:11px 14px;text-align:left;font-size:15.5px;font-weight:600;color:var(--ink);transition:background .1s}
+.opt:hover{background:#F0F2E8}
+.opt.chosen{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.subrow{margin-top:10px}
+.btn.sm{font-size:13.5px;padding:8px 16px}
+.opt.right{background:var(--green-soft);border-color:var(--green);color:var(--green-deep)}
+.opt.wrong{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.opt:disabled{cursor:default}
+.fb{margin-top:10px;font-weight:600;font-size:14.5px}
+.fb.ok{color:var(--green-deep)}
+.fb.no{color:var(--red)}
+.hint{margin-top:8px;font-size:14px;color:var(--ink2);border-left:3px solid var(--gold);padding-left:10px}
+
+/* sort game */
+.chipbank{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chip{border:1.5px solid var(--ink);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14.5px;color:var(--ink)}
+.chip.gone{display:none}
+.buckets{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.buckets{grid-template-columns:1fr}}
+.bucket{border:2px dashed var(--ink2);border-radius:12px;min-height:86px;padding:10px}
+.bucket h4{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink2);margin-bottom:6px}
+.bucket .placed{display:flex;flex-wrap:wrap;gap:6px}
+.placed span{font-size:13px;font-weight:600;border-radius:999px;padding:4px 10px}
+.placed span.ok{background:var(--green-soft);color:var(--green-deep)}
+.placed span.no{background:var(--red-soft);color:var(--red);text-decoration:line-through}
+.sortnow{border:2px solid var(--ink);border-radius:12px;padding:16px;text-align:center;margin:12px 0;background:#FBFBF6}
+.sortnow .item{font-family:var(--disp);font-weight:800;font-size:22px}
+.sortnow .val{font-family:var(--mono);font-weight:600;color:var(--ink2);margin-top:2px}
+.bucketbtns{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.score{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink2);margin-top:10px}
+.streak{color:var(--gold);font-weight:600}
+
+/* numeric input */
+.numrow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.numrow .dollar{font-family:var(--mono);font-weight:600;font-size:18px}
+.numin{border:2px solid var(--ink);border-radius:10px;padding:10px 12px;font-family:var(--mono);font-weight:600;font-size:17px;width:150px;background:var(--card);color:var(--ink)}
+.numin:focus{outline:3px solid var(--green-soft)}
+
+/* transaction picker */
+.txcard{border:1.5px solid var(--ink);border-radius:12px;padding:16px;margin:14px 0;background:#FBFBF6}
+.txcard .txd{font-weight:700;font-size:16px}
+.txcard .txm{font-family:var(--mono);color:var(--green-deep);font-weight:600}
+.pickrow{margin-top:12px}
+.pickrow h5{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;margin-bottom:6px;color:var(--ink2)}
+.acctchips{display:flex;flex-wrap:wrap;gap:7px}
+.acct{border:1.5px solid var(--ink2);background:var(--card);border-radius:999px;padding:6px 12px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.acct.selup{background:var(--green);border-color:var(--green);color:#fff}
+.acct.seldn{background:var(--red);border-color:var(--red);color:#fff}
+.acct.none{border-style:dashed}
+
+/* ledger record box */
+.record{position:relative;border:1.5px solid var(--green-deep);border-radius:12px;margin:18px 0;padding:16px 16px 16px 42px;background:
+  repeating-linear-gradient(180deg,#FDFDF8 0px,#FDFDF8 27px,#E7ECDC 28px);overflow:hidden}
+.record::before{content:"";position:absolute;top:0;bottom:0;left:28px;width:2px;background:var(--red)}
+.record h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--green-deep);margin-bottom:6px}
+.record .rline{font-family:var(--mono);font-weight:600;font-size:14.5px;line-height:28px;color:var(--ink)}
+
+/* stamp */
+.stampwrap{position:relative;min-height:120px;display:flex;align-items:center;justify-content:center;margin:10px 0}
+.stamp{font-family:var(--disp);font-weight:800;letter-spacing:.08em;font-size:30px;color:var(--green);border:4px solid var(--green);border-radius:10px;padding:10px 22px;transform:rotate(-7deg);opacity:0}
+.stamp.red{color:var(--red);border-color:var(--red)}
+.stamp.show{animation:slam .45s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes slam{0%{opacity:0;transform:rotate(-7deg) scale(2.4)}70%{opacity:1;transform:rotate(-7deg) scale(.94)}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.stamp.show{animation:none;opacity:1}}
+
+/* business cards */
+.picklist{margin-top:14px}
+.pickrow2{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
+.pickrow2 .mchip{margin-bottom:0}
+.pname{font-family:var(--disp);font-weight:800;font-size:17px}
+.pdoes{font-size:13.5px;color:var(--ink2);margin-top:2px}
+.pprice{font-family:var(--mono);font-size:12.5px;color:var(--green-deep);font-weight:600;margin-top:4px}
+.opsblock{margin-top:14px;border-top:1px solid var(--rule);padding-top:12px}
+.olabel{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--green);margin:10px 0 4px}
+.opsblock p{font-size:14px;line-height:1.5;margin-bottom:5px}
+.pickcard .story{margin-top:10px}
+.pickcard .story p{font-size:14px;line-height:1.55;color:var(--ink2);margin-bottom:7px}
+.bizgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+@media(max-width:600px){.bizgrid{grid-template-columns:1fr}}
+.bizcard{border:1.5px solid var(--ink);border-radius:14px;background:var(--card);padding:16px;position:relative;box-shadow:3px 3px 0 rgba(24,34,25,.12)}
+.bizcard.taken{outline:3px solid var(--green)}
+.mono{font-family:var(--mono)}
+.mchip{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:17px;color:#fff;margin-bottom:10px}
+.bizcard h3{font-family:var(--disp);font-weight:800;font-size:18px}
+.bizcard .who{font-size:13.5px;color:var(--ink2);font-weight:600;margin-top:2px}
+.bizcard .tag{font-size:14px;margin-top:8px}
+.bizcard .story{margin-top:12px;border-top:1px solid var(--rule);padding-top:10px}
+.bizcard .story p{font-size:13.5px;line-height:1.5;color:var(--ink2);margin-bottom:6px}
+.bizcard .price{font-family:var(--mono);font-size:12.5px;margin-top:8px;color:var(--green-deep);font-weight:600}
+.grouptag{position:absolute;top:12px;right:12px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:var(--green);color:#fff;border-radius:999px;padding:4px 10px;font-weight:600}
+.drawpanel{border:2px solid var(--ink);border-radius:14px;padding:20px;margin-top:20px;background:var(--card);text-align:center}
+.drawpanel h3{font-family:var(--disp);font-weight:800;font-size:22px}
+.hl{outline:3px solid var(--gold)}
+
+/* exit / results */
+.result{border:2px solid var(--ink);border-radius:14px;background:var(--ink);color:var(--paper);padding:26px;text-align:center;margin:18px 0}
+.result .bignum{font-family:var(--disp);font-weight:800;font-size:56px;line-height:1}
+.result .sub{font-family:var(--mono);font-size:12px;letter-spacing:.12em;margin-top:8px;color:#C9D2C6}
+.result .bizline{margin-top:10px;font-weight:600}
+
+.footer{border-top:2px solid var(--ink);margin-top:40px;padding:18px 0;font-family:var(--mono);font-size:11px;color:var(--ink2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.footer button{background:none;border:none;color:var(--ink2);font-family:var(--mono);font-size:11px;text-decoration:underline;padding:0}
+.tnote{font-size:14.5px;color:var(--ink2);margin:8px 0}
+.warnpick{border:2px solid var(--gold);background:#FBF4DF;border-radius:12px;padding:14px 16px;margin:14px 0;font-weight:600}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.resultform{margin-top:16px;text-align:left}
+.resultform label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#C9D2C6;display:block;margin-bottom:4px}
+.namein{width:100%;max-width:320px;border:2px solid var(--paper);border-radius:8px;padding:9px 11px;font-weight:600;font-size:15px;background:#fff;color:var(--ink)}
+.copyta{width:100%;margin-top:12px;border:1.5px solid #5A665B;border-radius:8px;background:#0F1710;color:#D9E2D6;font-family:var(--mono);font-size:12px;line-height:1.5;padding:10px;resize:none}
+.fslink{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;border:1.5px solid var(--ink);border-radius:999px;padding:5px 10px;background:transparent;color:var(--ink);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <div class="brand" onclick="go('#/')">THE STOREFRONT<small>VIRTUAL BUSINESS</small></div>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<script>
+/* ================= COURSE ================= */
+var COURSE={
+key:"sf3_",
+brand:"THE STOREFRONT",
+heroEyebrow:"VIRTUAL BUSINESS",
+heroTitle:"THE STOREFRONT",
+heroTag:"Learn how an online business works, then run the numbers for a store of your own.",
+startLabel:"Start Lesson 1",
+browseLabel:"",
+unitTitle:"Unit 1 &middot; Starting an Online Business",
+unitMeta:"8 LESSONS",
+nextUnit:{num:"LESSON 9+",t:"Unit 2 &middot; The Web Presence",sub:"OPENS AFTER STORE CHECK 1"},
+dayEyebrow:"UNIT 1",
+pickLabel:"YOUR STORE",
+pickWarn:"Choose a store earlier in this lesson to continue.",
+entWord:"Store",
+ownerLabel:"Owner",
+entitiesEyebrow:"FIVE STORES",
+entitiesTitle:"The Stores",
+drawCopy:"Review each store and choose one to run.",
+resultNote:"Copy the block and paste it into today's Canvas assignment.",
+footer:"ALIGNED TO 19 TAC &sect;130.141, VIRTUAL BUSINESS",
+mapTitle:"Unit 1 map",
+pickSummaryLabel:"NUMBERS",
+pickSummary:function(b){return "Sells at "+fm(b.p)+". Costs "+fm(b.c)+" per sale. Fixed costs "+fm(b.f)+" a month."},
+teacher:[
+{h:"Lesson structure",ps:[
+"Lesson 1 teaches what a virtual business is, then students choose one of five stores inside the lesson. Every calculation after that uses that store's price, cost, and fixed costs.",
+"Lessons 2 through 8 open with the store already selected. If a student is on a different device, the picker appears again automatically."]},
+{h:"The five stores",ps:[
+"Laced Up Resale, Press Play Tees, Glow Co. Candles, Clutch Coaching, and Rewind Vintage.",
+"Prices range from $18 to $180 and profit margins range from 22 percent to 80 percent, so break-even, margin, and growth math differ for every student.",
+"The five cover distinct business models: resale, print on demand, handmade product, a pure service, and thrift resale."]},
+{h:"Canvas",ps:[
+"Create one text-entry assignment per lesson. Students enter their name on the result screen, tap Copy for Canvas, and paste the block in.",
+"The block carries the lesson, store, score, date, and a verification code tied to those details."]}]
+};
+
+/* ================= DATA: STORES ================= */
+var BIZ=[
+{id:"kicks",name:"Laced Up Resale",owner:"Andre Cole",hue:15,
+ does:"Buying sneakers below market value and reselling them online.",
+ price:"$180 per pair",p:180,c:140,f:200,
+ story:[
+  "Andre Cole bought his first pair to resell with money from a summer job and sold it for a $60 profit two weeks later.",
+  "He now buys from release drops, local sellers, and estate sales, and lists on a resale marketplace.",
+  "Inventory is the challenge. Money is tied up in shoes sitting in his closet until they sell.",
+  "A pair that does not sell within sixty days usually has to be discounted."],
+ customers:"Sneaker collectors and resellers, mostly ages 16 to 30, nationwide.",
+ ops:[
+  "Andre lists on a marketplace that charges a fee on every completed sale.",
+  "Shipping is paid by the buyer, but Andre pays for the box, the label printer, and authentication.",
+  "He holds about eight pairs of inventory at a time."],
+ fixed:[{n:"Marketplace subscription",v:60},{n:"Authentication service",v:80},{n:"Shipping supplies and label printer plan",v:60}],
+ model:"Resale of physical goods",
+ risk:"Money is tied up in inventory before any sale happens.",
+ growth:{what:"raising monthly sales from 10 pairs to 18",why:"by buying at two additional estate sales a month"}},
+
+{id:"tees",name:"Press Play Tees",owner:"Riley Nunez",hue:203,
+ does:"Selling printed shirts through a print on demand service.",
+ price:"$24 per shirt",p:24,c:14,f:50,
+ story:[
+  "Riley Nunez started making shirt designs for a school club and people outside the club began asking to buy them.",
+  "The store uses print on demand, so nothing is printed until an order is placed.",
+  "Riley has never held inventory and has never had unsold stock.",
+  "The tradeoff is that the printing service takes a large share of every sale."],
+ customers:"Students and local sports fans, mostly ordering one or two shirts at a time.",
+ ops:[
+  "Orders go directly from the storefront to the printing service, which ships to the customer.",
+  "Riley designs the artwork and handles customer questions.",
+  "The store has no physical inventory and no shipping work."],
+ fixed:[{n:"Storefront platform plan",v:30},{n:"Design software",v:20}],
+ model:"Print on demand",
+ risk:"Profit per sale is low, so volume matters more than in other models.",
+ growth:{what:"raising monthly sales from 15 shirts to 40",why:"by releasing a design for each home game"}},
+
+{id:"candles",name:"Glow Co. Candles",owner:"Priya Raman",hue:35,
+ does:"Pouring and shipping small batch candles.",
+ price:"$18 per candle",p:18,c:8,f:40,
+ story:[
+  "Priya Raman started pouring candles in her kitchen as a gift project and kept getting asked to make more.",
+  "She now pours in batches of thirty on weekends and ships from home.",
+  "Wax and jars are bought in bulk, which lowers her cost per candle but requires money up front.",
+  "Shipping glass is the ongoing problem, since a broken candle means a full replacement at her expense."],
+ customers:"Repeat local customers plus online orders, heaviest from October through December.",
+ ops:[
+  "Priya buys wax, wicks, jars, and fragrance in bulk every two months.",
+  "She pours on weekends and ships twice a week.",
+  "Each candle is packed with protective material, which is included in the cost per sale."],
+ fixed:[{n:"Online store plan",v:25},{n:"Craft market table fee",v:15}],
+ model:"Handmade physical product",
+ risk:"Bulk material purchases require cash before any sale is made.",
+ growth:{what:"raising monthly sales from 12 candles to 30",why:"by adding a holiday gift set"}},
+
+{id:"coach",name:"Clutch Coaching",owner:"Devon Hayes",hue:265,
+ does:"One on one gaming coaching sessions delivered over voice chat.",
+ price:"$25 per session",p:25,c:5,f:60,
+ story:[
+  "Devon Hayes reached a high competitive rank and started getting asked how to improve.",
+  "The first paid session was $10. Devon now charges $25 for a one hour session.",
+  "There is no product to buy, no inventory, and nothing to ship.",
+  "The limit is time. Devon can only coach so many hours in a week, no matter how much demand exists."],
+ customers:"Competitive players seeking rank improvement, booked through a scheduling link.",
+ ops:[
+  "Sessions are booked online and delivered over voice chat with screen sharing.",
+  "Devon records each session and sends the recording to the client afterward.",
+  "The cost per sale covers the payment processing fee and cloud storage for recordings."],
+ fixed:[{n:"Scheduling and payment platform",v:35},{n:"Streaming and recording software",v:25}],
+ model:"Service business",
+ risk:"Revenue is limited by available hours, since the owner is the product.",
+ growth:{what:"raising monthly sessions from 8 to 20",why:"by adding weekend blocks and a group session option"}},
+
+{id:"vintage",name:"Rewind Vintage",owner:"Nora Whitfield",hue:145,
+ does:"Sourcing and reselling vintage clothing online.",
+ price:"$45 per piece",p:45,c:25,f:100,
+ story:[
+  "Nora Whitfield started buying vintage jackets at thrift stores because she liked them, then began reselling the ones that did not fit.",
+  "She now sources twice a week from thrift stores, estate sales, and bulk lots.",
+  "Every piece is one of a kind, which means every item must be photographed and listed individually.",
+  "Listing time, not sourcing, is what limits how much she can sell."],
+ customers:"Vintage buyers nationwide, found mostly through social media posts.",
+ ops:[
+  "Nora sources, cleans, photographs, measures, and lists each item individually.",
+  "The cost per sale includes the item, cleaning, and shipping materials.",
+  "She keeps about forty items listed at any time."],
+ fixed:[{n:"Marketplace and storefront fees",v:45},{n:"Photography backdrop and lighting rental",v:25},{n:"Storage rack and garment care supplies",v:30}],
+ model:"Thrift resale of one of a kind items",
+ risk:"Each item must be listed individually, which limits how fast the store can grow.",
+ growth:{what:"raising monthly sales from 10 pieces to 22",why:"by batching photography into one session a week"}}
+];
+
+/* derived store math */
+function r2(n){return Math.round(n*100)/100}
+function ppu(b){return b.p-b.c}
+function be(b){return b.f/ppu(b)}
+function rev(b,u){return b.p*u}
+function profAt(b,u){return u*ppu(b)-b.f}
+function marg(b){return Math.round(ppu(b)/b.p*1000)/10}
+function fixSum(b){return b.fixed.reduce(function(t,x){return t+x.v},0)}
+function fm(n){var o={maximumFractionDigits:2};if(n%1!==0)o.minimumFractionDigits=2;return "$"+n.toLocaleString("en-US",o)}
+
+/* block constructors */
+function T(h,lines,check){return {t:"teach",h:h,lines:lines,check:check||null}}
+function Q(q,o,a,why){return {q:q,o:o,a:a,why:why||""}}
+function M(title,qs){return {t:"mcq",title:title,qs:qs}}
+function S(title,prompt,buckets,items){return {t:"sort",title:title,prompt:prompt,buckets:buckets,items:items}}
+function N(prompt,ans,why){return {t:"num",prompt:prompt,ans:ans,why:why||""}}
+function TXB(title,txs,note){return {t:"tx",title:title,txs:txs,note:note||""}}
+function R(lines){return {t:"record",lines:lines}}
+function P(txt){return {t:"note",txt:txt}}
+function STAMP(label){return {t:"stamp",label:label}}
+function PICK(){return {t:"pick"}}
+
+function ownerOpts(b){var o=[b.owner];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.owner)});return o}
+function priceOpts(b){var o=[b.price];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.price)});return o}
+function doesOpts(b){var o=[b.does];BIZ.forEach(function(x){if(x.id!==b.id&&o.length<4)o.push(x.does)});return o}
+function modelOpts(b){var o=[b.model];BIZ.forEach(function(x){if(x.model!==b.model&&o.indexOf(x.model)<0&&o.length<4)o.push(x.model)});return o}
+
+/* ================= DATA: LESSONS ================= */
+var LESSONS=[
+
+/* ============================ LESSON 1 ============================ */
+{n:1,title:"What a Virtual Business Is",teks:"130.141(c)(2)(A)(B)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("A business with no storefront, no building, and customers in thirty states is",
+       ["not a real business","a business that operates online","only possible for large companies","illegal in Texas"],1),
+     Q("The amount a customer pays for a product is called the",
+       ["cost","price","profit","margin"],1)])]},
+
+ {name:"Basics",mins:8,blocks:[
+   T("What a virtual business is.",[
+     "A virtual business sells to customers online rather than from a physical storefront.",
+     "The store is a website, an app, or a page on a marketplace.",
+     "Orders and payments are processed online, and products are shipped or delivered digitally.",
+     "It is a real business with real revenue, real costs, real records, and real tax obligations."],
+     Q("A virtual business is best described as",
+       ["a business that exists only in simulations","a business that sells online rather than from a storefront","a business without customers","a business that does not pay taxes"],1)),
+   T("Advantages.",[
+     "Startup costs are lower because there is no building to rent, furnish, or staff.",
+     "The potential customer base is anyone online rather than only people who pass a physical location.",
+     "The store accepts orders at any hour without anyone present.",
+     "These advantages are why a large share of new small businesses now start online."],
+     Q("The main reason startup costs are lower for a virtual business is that there is no",
+       ["product to sell","building to rent and furnish","need for records","payment processing"],1)),
+   T("Disadvantages.",[
+     "There is no walk-in traffic, so every customer must be found through marketing.",
+     "Competition is not limited to nearby businesses. Every similar seller online is a competitor.",
+     "Customers cannot examine the product before buying, which raises the importance of photographs, descriptions, and reviews.",
+     "Shipping costs and delivery problems become the seller's responsibility."],
+     Q("A significant disadvantage of a virtual business is that",
+       ["it cannot accept payment","every customer must be found through marketing","it cannot ship products","it cannot be profitable"],1)),
+   T("Common online business models.",[
+     "Resale means buying products below market value and reselling them at a higher price.",
+     "Print on demand means the product is not produced until a customer orders it.",
+     "Handmade means the owner produces the product, usually in small batches.",
+     "A service business sells the owner's time or skill rather than a physical product.",
+     "Each model has a different cost structure, which changes every number in the business."],
+     Q("In a print on demand business, the product is produced",
+       ["in bulk before any orders arrive","only after a customer places an order","by the customer","once per month"],1)),
+   S("Virtual or physical storefront?","Select the correct column for each business.",["Virtual","Physical storefront"],[
+     {t:"An online candle shop shipping nationwide",b:0},
+     {t:"A mall food court stand",b:1},
+     {t:"A print on demand shirt store",b:0},
+     {t:"A dine-in restaurant",b:1},
+     {t:"A coach delivering sessions over voice chat",b:0},
+     {t:"A barbershop on Main Street",b:1}]),
+   S("Product or service?","Select the correct column for each business.",["Sells a product","Sells time or skill"],[
+     {t:"Reselling sneakers",b:0},
+     {t:"One on one coaching sessions",b:1},
+     {t:"Pouring and shipping candles",b:0},
+     {t:"Editing video for creators",b:1},
+     {t:"Printing and shipping shirts",b:0},
+     {t:"Tutoring over video call",b:1}])]},
+
+ {name:"Your Store",mins:6,blocks:[
+   P("You will now choose a store to run. Every calculation for the rest of this unit uses that store's numbers."),
+   PICK(),
+   function(b){return T(b.name,[
+     "Owner: "+b.owner+".",
+     "Sells: "+b.does,
+     "Price: "+b.price+".",
+     "Business model: "+b.model,
+     "Customers: "+b.customers])},
+   function(b){return T("How "+b.name+" operates.",b.ops)},
+   function(b){return M("Confirm the details.",[
+     Q("Who owns "+b.name+"?",ownerOpts(b),0),
+     Q("What does "+b.name+" charge?",priceOpts(b),0),
+     Q("What business model does "+b.name+" use?",modelOpts(b),0)])}]},
+
+ {name:"The Numbers",mins:8,blocks:[
+   function(b){return T("Revenue at "+b.name+".",[
+     b.name+" charges "+fm(b.p)+" per sale.",
+     "Revenue is the total amount customers pay, before any costs are subtracted.",
+     "Revenue is calculated as price multiplied by the number of sales."])},
+   function(b){return N("Revenue at "+b.name+" from 10 sales:",rev(b,10),fm(b.p)+" times 10.")},
+   function(b){return N("Revenue from 25 sales:",rev(b,25),fm(b.p)+" times 25.")},
+   function(b){return N("Revenue from 40 sales:",rev(b,40),fm(b.p)+" times 40.")},
+   function(b){return T("The main risk at "+b.name+".",[
+     b.risk,
+     "Every business model carries a different risk, and the risk shapes how the owner has to plan.",
+     "Understanding the risk before starting is what separates a plan from a hope."])},
+   function(b){return M("Understand the model.",[
+     Q("The primary risk at "+b.name+" is that",
+       [b.risk,"the business has no customers","the price is set by the government","online businesses cannot ship"],0),
+     Q("Compared to a physical storefront, "+b.name+" has",
+       ["higher rent","lower startup costs and no walk-in traffic","fewer possible customers","no need for records"],1)])},
+   function(b){return R([
+     "STORE PROFILE",
+     "Store: "+b.name,
+     "Owner: "+b.owner,
+     "Model: "+b.model,
+     "Price: "+fm(b.p),
+     "Revenue at 20 sales: "+fm(rev(b,20))])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("A virtual business operates",["from a mall","online","only on weekends","without customers"],1),
+     Q("Compared to a storefront, a virtual business usually has",["higher rent","lower startup costs","fewer possible customers","no records"],1),
+     Q("Revenue is calculated as",["price times number of sales","price minus cost","sales minus expenses","cost times sales"],0),
+     Q("In print on demand, the product is made",["in bulk in advance","after an order is placed","by the customer","once a year"],1)])]}]},
+
+/* ============================ LESSON 2 ============================ */
+{n:2,title:"Price, Cost, and Profit",teks:"130.141(c)(4)(C), (c)(5)(D)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("A virtual business sells",["online","only in person","only wholesale","only to friends"],0),
+     Q("Revenue equals",["price times number of sales","price minus cost","sales minus fixed costs","cost per sale"],0),
+     Q("A disadvantage of a virtual business is",["it cannot accept payment","there is no walk-in traffic","it cannot be profitable","it requires a building"],1)])]},
+
+ {name:"The Three Numbers",mins:9,blocks:[
+   T("Price.",[
+     "Price is the amount the customer pays.",
+     "Price is a decision the owner makes, not a fixed condition of the market.",
+     "Setting a price too low means working a great deal for very little. Setting it too high without a reason customers accept means few sales."]),
+   T("Cost per sale.",[
+     "Cost per sale is everything the business spends to complete one sale.",
+     "For a product, this includes the item itself, packaging, and shipping materials.",
+     "It also includes the payment processing fee, which is typically around 3 percent of the sale and is frequently overlooked.",
+     "If cost per sale is unknown, every other figure in the business is unreliable."],
+     Q("Cost per sale means",
+       ["the amount the customer pays","everything spent to complete one sale","the monthly platform fee","the profit earned"],1)),
+   T("Profit per sale.",[
+     "Profit per sale equals price minus cost per sale.",
+     "A shirt priced at $24 that costs $14 to produce and ship yields $10 of profit per sale.",
+     "This figure, not price, determines whether a business can succeed.",
+     "A store selling $180 items at $40 profit and a store selling $12 items at $10 profit are closer than the prices suggest."],
+     Q("A product priced at $18 with a cost of $8 produces profit per sale of",["$26.00","$10.00","$8.00","$18.00"],1)),
+   T("How prices are set.",[
+     "Cost based pricing starts with the cost and adds the desired profit. A cost of $35 with a target profit of $20 produces a price of $55.",
+     "Competition based pricing sets the price relative to what similar sellers charge.",
+     "Value based pricing sets the price according to what the result is worth to the customer rather than what it cost to produce.",
+     "Value based pricing is why a digital product that took one weekend to create can sell repeatedly at a high margin."],
+     Q("Setting a price according to what the result is worth to the customer is called",
+       ["cost based pricing","competition based pricing","value based pricing","discount pricing"],2)),
+   N("A price of $30.00 and a cost of $22.00. Profit per sale:",8,"30.00 minus 22.00."),
+   N("A price of $120.00 and a cost of $85.00. Profit per sale:",35,"120.00 minus 85.00."),
+   N("A target profit of $20.00 per sale with a cost of $35.00. The price should be:",55,"35.00 plus 20.00."),
+   N("A price of $50.00. The product costs $30.00, shipping is $4.00, and the payment fee is $1.50. Profit per sale:",14.5,
+     "50.00 minus 30.00 minus 4.00 minus 1.50.")]},
+
+ {name:"Your Store",mins:8,blocks:[
+   function(b){return P(b.name+" sells at "+fm(b.p)+" with a cost per sale of "+fm(b.c)+".")},
+   function(b){return N("Profit per sale at "+b.name+":",ppu(b),fm(b.p)+" minus "+fm(b.c)+".")},
+   function(b){return N("Profit from 10 sales:",ppu(b)*10,fm(ppu(b))+" times 10.")},
+   function(b){return N("Revenue from those same 10 sales:",rev(b,10),
+     "Revenue counts the full price. This is why revenue and profit are often confused.")},
+   function(b){return N("The difference between that revenue and that profit:",rev(b,10)-ppu(b)*10,
+     "That difference is the total cost of making those 10 sales.")},
+   function(b){return M("Apply it.",[
+     Q("If "+b.owner+" raises the price by $5.00 and cost stays the same, profit per sale becomes",
+       [fm(ppu(b)+5),fm(ppu(b)),fm(ppu(b)-5),fm(b.p+5)],0),
+     Q("If a supplier raises "+b.owner+"'s cost by $3.00 and the price stays the same, profit per sale becomes",
+       [fm(ppu(b)-3),fm(ppu(b)+3),fm(ppu(b)),fm(b.c+3)],0)])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("Profit per sale equals",["price minus cost per sale","price plus cost","cost minus price","the monthly fee"],0),
+     Q("A price of $40.00 with a cost of $28.00 produces profit per sale of",["$68.00","$28.00","$12.00","$40.00"],2),
+     Q("Payment processing fees are",["free","part of the cost per sale","paid separately by the customer","charged only to large sellers"],1),
+     Q("If cost rises and price stays the same, profit per sale",["rises","falls","stays the same","doubles"],1)])]}]},
+
+/* ============================ LESSON 3 ============================ */
+{n:3,title:"Fixed and Variable Costs",teks:"130.141(c)(5)(A)(D)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("Profit per sale equals",["price minus cost per sale","price times cost","the platform fee","total revenue"],0),
+     Q("A price of $25.00 with a cost of $5.00 produces profit per sale of",["$30.00","$25.00","$20.00","$5.00"],2),
+     Q("Value based pricing sets the price according to",["what it cost to produce","what the result is worth to the customer","the lowest competitor","a fixed formula"],1)])]},
+
+ {name:"Two Kinds of Cost",mins:9,blocks:[
+   T("Fixed costs.",[
+     "A fixed cost is charged every month regardless of how many sales occur.",
+     "Platform subscriptions, software, storage, and recurring service fees are fixed costs.",
+     "If a store sells nothing in a month, its fixed costs are still owed.",
+     "Fixed costs set the amount a store must earn before it makes any money at all."],
+     Q("A fixed cost is one that",
+       ["occurs only when a sale is made","is charged every month regardless of sales","is always $100","equals the profit"],1)),
+   T("Variable costs.",[
+     "A variable cost occurs only when a sale occurs.",
+     "The product itself, packaging, shipping for one order, and the payment fee on one sale are variable costs.",
+     "Ten sales produce ten times the variable cost. Zero sales produce none.",
+     "Cost per sale is the variable cost."],
+     Q("Which of these is a variable cost?",
+       ["A monthly platform subscription","Shipping one order","Storage unit rent","An annual software license"],1)),
+   T("Why the distinction matters.",[
+     "Fixed costs determine the monthly threshold. Variable costs determine profit per sale.",
+     "Treating a monthly subscription as a per-sale cost makes every sale appear less profitable than it is.",
+     "Fixed cost per sale decreases as sales increase. A $100 monthly fee spread across 10 sales is $10 each. Across 100 sales it is $1 each.",
+     "Variable cost per sale never decreases with volume in the same way. The tenth item costs what the first one did."],
+     Q("As the number of sales increases, fixed cost per sale",
+       ["increases","decreases","stays exactly the same","becomes a variable cost"],1)),
+   T("Startup costs.",[
+     "A startup cost is a one time amount spent before the business makes any sales.",
+     "Equipment, initial inventory, a logo, and business registration are startup costs.",
+     "Startup costs are neither fixed nor variable, because they do not recur monthly and do not attach to a single sale.",
+     "They answer a different question: how long until the business repays what was invested in it."],
+     Q("A one time purchase of equipment before any sales occur is",
+       ["a fixed cost","a variable cost","a startup cost","profit"],2)),
+   S("Fixed or variable?","Select the correct column for each cost.",["Fixed","Variable"],[
+     {t:"Monthly platform subscription",b:0},
+     {t:"Shipping one order",b:1},
+     {t:"Design software subscription",b:0},
+     {t:"Materials for one item",b:1},
+     {t:"Storage rental",b:0},
+     {t:"Payment fee on one sale",b:1}]),
+   N("Fixed costs of $120 a month with 10 sales. Fixed cost per sale:",12,"120 divided by 10."),
+   N("The same $120 in fixed costs with 60 sales. Fixed cost per sale:",2,"120 divided by 60."),
+   N("Fixed costs of $80 plus a variable cost of $6 per sale. Total cost in a month with 20 sales:",200,"80 plus 6 times 20.")]},
+
+ {name:"Your Store",mins:8,blocks:[
+   function(b){return T("Fixed costs at "+b.name+".",[
+     b.fixed.map(function(x){return x.n+": "+fm(x.v)}).join(". ")+".",
+     "These amounts are charged every month whether "+b.name+" sells anything or not."])},
+   function(b){return N("Total monthly fixed costs at "+b.name+":",fixSum(b),
+     b.fixed.map(function(x){return fm(x.v)}).join(" + ")+".")},
+   function(b){return N("A month with zero sales. The amount "+b.name+" loses:",b.f,
+     "Fixed costs are owed regardless of sales.")},
+   function(b){return N("Fixed costs for a full year:",b.f*12,fm(b.f)+" times 12.")},
+   function(b){return N("A month with 20 sales. Total cost is fixed costs plus "+fm(b.c)+" per sale, 20 times:",r2(b.f+b.c*20),
+     fm(b.f)+" plus "+fm(b.c)+" times 20.")},
+   function(b){return N("Fixed cost per sale in that 20 sale month:",r2(b.f/20),fm(b.f)+" divided by 20.")},
+   function(b){return M("Apply it.",[
+     Q("If "+b.name+" doubled its sales to 40 in a month, the fixed cost per sale would",
+       ["double","fall by half","stay the same","disappear"],1),
+     Q("The cost of the product or materials for one sale at "+b.name+" is",
+       ["a fixed cost","a variable cost","a startup cost","not a cost"],1)])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("A cost charged every month regardless of sales is",["variable","fixed","a startup cost","profit"],1),
+     Q("A cost that occurs only when a sale occurs is",["fixed","variable","a startup cost","revenue"],1),
+     Q("As sales increase, fixed cost per sale",["rises","falls","never changes","doubles"],1),
+     Q("A one time purchase made before any sales is",["a fixed cost","a variable cost","a startup cost","revenue"],2)])]}]},
+
+/* ============================ LESSON 4 ============================ */
+{n:4,title:"Break-Even",teks:"130.141(c)(4)(C), (c)(5)(A)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("A monthly platform subscription is",["a variable cost","a fixed cost","a startup cost","revenue"],1),
+     Q("Shipping one order is",["a fixed cost","a variable cost","a startup cost","profit"],1),
+     Q("As sales rise, fixed cost per sale",["rises","falls","stays the same","becomes variable"],1)])]},
+
+ {name:"The Calculation",mins:9,blocks:[
+   T("What break-even means.",[
+     "Break-even is the point at which total profit from sales exactly covers fixed costs.",
+     "At break-even the business has neither gained nor lost money for the month.",
+     "One sale below break-even means the month lost money. One sale above it means the month made money."],
+     Q("At break-even, the month's profit is",["equal to fixed costs","zero","equal to revenue","negative"],1)),
+   T("The formula.",[
+     "Break-even units equals fixed costs divided by profit per sale.",
+     "Fixed costs of $50 with profit per sale of $10 produces a break-even point of 5 units.",
+     "The formula uses profit per sale, not price. Using price produces a much lower number and makes the business appear far healthier than it is."],
+     Q("Fixed costs of $60 and profit per sale of $20 produce a break-even point of",["3 sales","20 sales","60 sales","80 sales"],0)),
+   T("What the number tells the owner.",[
+     "It converts a business idea into a specific weekly target.",
+     "Five sales a month is achievable in a weekend. Five hundred a month is a full time operation requiring help.",
+     "If the break-even point is a number the owner cannot realistically reach, the price is too low or the fixed costs are too high.",
+     "This is the calculation that determines whether a business plan is realistic before any money is spent."]),
+   T("Lowering the break-even point.",[
+     "Reducing fixed costs lowers the threshold. Canceling an unused subscription is the simplest version.",
+     "Increasing profit per sale also lowers it, either by raising the price or by reducing the cost per sale through bulk purchasing or a different supplier.",
+     "Every reduction has a consequence. Cutting an advertising budget lowers fixed costs but may also lower sales."],
+     Q("Which change lowers a store's break-even point?",
+       ["Increasing fixed costs","Increasing profit per sale","Lowering the price with no change in cost","Making fewer sales"],1)),
+   N("Fixed costs of $200 and profit per sale of $40. Break-even sales:",5,"200 divided by 40."),
+   N("Fixed costs of $90 and profit per sale of $15. Break-even sales:",6,"90 divided by 15."),
+   N("Fixed costs of $100, a price of $25, and a cost of $5. Break-even sales:",5,"Profit per sale is 20. 100 divided by 20."),
+   N("Fixed costs of $150, a price of $30, and a cost of $12. Break-even sales:",9,"Profit per sale is 18. 150 divided by 18."),
+   N("Fixed costs reduced from $150 to $90 with profit per sale of $18. New break-even sales:",5,"90 divided by 18.")]},
+
+ {name:"Your Store",mins:8,blocks:[
+   function(b){return N("Break-even sales at "+b.name+". Fixed costs "+fm(b.f)+" divided by profit per sale "+fm(ppu(b))+":",be(b),
+     fm(b.f)+" divided by "+fm(ppu(b))+".")},
+   function(b){return N("Revenue required to reach break-even. Break-even sales times the price of "+fm(b.p)+":",rev(b,be(b)),
+     be(b)+" sales times "+fm(b.p)+".")},
+   function(b){return N("If "+b.name+" makes 10 sales beyond break-even, profit for the month:",ppu(b)*10,
+     "Past break-even, each sale contributes its full profit per sale of "+fm(ppu(b))+".")},
+   function(b){return N("If "+b.owner+" raised the price by $5.00 with no change in cost, the new break-even point, rounded to two decimals:",
+     Math.round(b.f/(ppu(b)+5)*100)/100,
+     fm(b.f)+" divided by the new profit per sale of "+fm(ppu(b)+5)+".")},
+   function(b){return M("Evaluate.",[
+     Q("A break-even point of "+be(b)+" sales a month at "+b.name+" is",
+       ["a realistic target","impossible for any business"],0),
+     Q("If "+b.name+" sold one unit fewer than break-even in a month, the month would",
+       ["show a small loss","break even exactly","show a profit","have no result"],0)])},
+   function(b){return R([
+     "BREAK-EVEN",
+     "Store: "+b.name,
+     "Fixed costs: "+fm(b.f),
+     "Profit per sale: "+fm(ppu(b)),
+     "Break-even sales: "+be(b),
+     "Break-even revenue: "+fm(rev(b,be(b)))])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("Break-even units equals",["fixed costs divided by profit per sale","price times cost","profit times sales","fixed costs times 12"],0),
+     Q("Fixed costs of $80 and profit per sale of $8 produce a break-even point of",["8 sales","10 sales","80 sales","640 sales"],1),
+     Q("Using price instead of profit per sale in the formula makes a business appear",["worse than it is","healthier than it is","exactly accurate","impossible to calculate"],1),
+     Q("Below break-even, the month",["made money","lost money","broke even","cannot be measured"],1)])]}]},
+
+/* ============================ LESSON 5 ============================ */
+{n:5,title:"Revenue, Margin, and Growth",teks:"130.141(c)(4)(C), (c)(5)(A)(D)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("Break-even units equals",["fixed costs divided by profit per sale","price divided by cost","sales times price","revenue minus cost"],0),
+     Q("Past break-even, each additional sale adds",["nothing","the full price","the profit per sale","the fixed cost"],2),
+     Q("One way to lower break-even is to",["raise fixed costs","raise profit per sale","lower the price","reduce sales"],1)])]},
+
+ {name:"Measuring the Business",mins:9,blocks:[
+   T("Revenue is not profit.",[
+     "Revenue is the total amount customers paid. Profit is what remains after all costs.",
+     "A store can generate $10,000 in revenue and still lose money for the month.",
+     "When a business owner reports a large figure without specifying which one it is, it is usually revenue.",
+     "Revenue measures activity. Profit measures results."],
+     Q("A business with $10,000 in revenue",
+       ["definitely made money","may have lost money depending on costs","has $10,000 in profit","has no costs"],1)),
+   T("Profit margin.",[
+     "Profit margin is profit per sale divided by price, expressed as a percentage.",
+     "A $10 profit on a $20 item is a 50 percent margin. A $10 profit on a $100 item is a 10 percent margin.",
+     "The profit per sale is identical, but the businesses are not comparable.",
+     "A low margin business has very little room for a discount, a price increase from a supplier, or an error."],
+     Q("A profit per sale of $6.00 on a price of $24.00 is a margin of",["6 percent","18 percent","25 percent","400 percent"],2)),
+   T("Monthly profit.",[
+     "Monthly profit equals profit per sale multiplied by the number of sales, minus fixed costs.",
+     "Thirty sales at $10 profit each produces $300. With $100 in fixed costs, monthly profit is $200.",
+     "Calculating this before the month begins is planning. Calculating it afterward is only record keeping."],
+     Q("Profit per sale of $10, 30 sales, and fixed costs of $100 produce monthly profit of",["$300","$200","$100","$400"],1)),
+   T("Why growth increases profit faster than sales.",[
+     "Doubling sales more than doubles profit, because fixed costs do not double.",
+     "At $10 profit per sale with $100 in fixed costs, 20 sales produce $100 of profit. Forty sales produce $300.",
+     "Sales doubled and profit tripled.",
+     "The limit on growth is capacity. A service business selling the owner's time reaches a ceiling that a product business does not."],
+     Q("Doubling sales usually",["exactly doubles profit","more than doubles profit","halves profit","has no effect"],1)),
+   N("A price of $40.00 with profit per sale of $10.00. Profit margin as a percent:",25,"10 divided by 40, times 100."),
+   N("A price of $50.00 and a cost of $20.00. Profit margin as a percent:",60,"Profit per sale is 30. 30 divided by 50."),
+   N("Profit per sale of $12.00, 25 sales, and fixed costs of $150. Monthly profit:",150,"12 times 25 is 300. Minus 150."),
+   N("Profit per sale of $9.00, 40 sales, and fixed costs of $120. Monthly profit:",240,"9 times 40 is 360. Minus 120.")]},
+
+ {name:"Your Store",mins:8,blocks:[
+   function(b){return N("Revenue at "+b.name+" in a 25 sale month:",rev(b,25),fm(b.p)+" times 25.")},
+   function(b){return N("Monthly profit in that 25 sale month. Profit per sale "+fm(ppu(b))+" times 25, minus fixed costs "+fm(b.f)+":",profAt(b,25),
+     fm(ppu(b))+" times 25 is "+fm(ppu(b)*25)+", minus "+fm(b.f)+".")},
+   function(b){return M("Your margin.",[
+     Q("Profit per sale at "+b.name+" is "+fm(ppu(b))+" on a price of "+fm(b.p)+". The profit margin is about",
+       [marg(b)+" percent",(Math.round(marg(b)*2*10)/10)+" percent",(Math.round(marg(b)/2*10)/10)+" percent","100 percent"],0,
+       fm(ppu(b))+" divided by "+fm(b.p)+"."),
+     Q("A store with a margin of "+marg(b)+" percent has",
+       [marg(b)>=50?"substantial room for discounts and cost increases":"limited room for discounts and cost increases",
+        marg(b)>=50?"limited room for discounts and cost increases":"substantial room for discounts and cost increases",
+        "no ability to make a profit","a fixed profit regardless of price"],0)])},
+   function(b){return N("Now double the month to 50 sales. Monthly profit:",profAt(b,50),
+     "Sales doubled but fixed costs stayed at "+fm(b.f)+".")},
+   function(b){return N("How much more profit did doubling from 25 to 50 sales produce?",profAt(b,50)-profAt(b,25),
+     fm(profAt(b,50))+" minus "+fm(profAt(b,25))+".")},
+   function(b){return T("A growth plan for "+b.name+".",[
+     b.owner+" is considering "+b.growth.what+", "+b.growth.why+".",
+     "Growth is only worth pursuing if the additional sales produce more profit than the effort and cost required.",
+     b.risk])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("Revenue is",["all money received before costs","what remains after costs","the same as profit","a fixed cost"],0),
+     Q("Profit margin equals",["profit per sale divided by price","price minus cost","fixed costs divided by sales","revenue times two"],0),
+     Q("Doubling sales usually",["exactly doubles profit","more than doubles profit","halves profit","has no effect"],1),
+     Q("A low margin business is most vulnerable to",["high sales volume","a supplier raising costs","low fixed costs","strong demand"],1)])]}]},
+
+/* ============================ LESSON 6 ============================ */
+{n:6,title:"Finding and Keeping Customers",teks:"130.141(c)(2)(B), (c)(4)(C)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("Profit margin equals",["profit per sale divided by price","price minus cost","revenue minus fixed costs","sales times price"],0),
+     Q("Monthly profit equals",["profit per sale times sales, minus fixed costs","revenue minus price","price times sales","fixed costs times sales"],0),
+     Q("Revenue measures",["activity","results","profit","margin"],0)])]},
+
+ {name:"Marketing",mins:9,blocks:[
+   T("Why marketing is required online.",[
+     "A physical storefront receives customers who happen to pass by. An online store receives none.",
+     "Every visitor to an online store arrived because of something the business did.",
+     "Marketing is the work of getting the right people to the store and giving them a reason to buy."],
+     Q("An online store must invest in marketing primarily because",
+       ["online stores are more expensive","there is no walk-in traffic","products cost more online","payment processing requires it"],1)),
+   T("The target customer.",[
+     "A target customer is the specific group most likely to buy the product.",
+     "Defining it narrowly makes marketing far more effective, because messages and images can be aimed at a real person rather than everyone.",
+     "A store that describes its customer as anyone who likes shopping has not defined a target customer.",
+     "Age, location, interests, and the problem the product solves all help define it."],
+     Q("The clearest problem with describing a target customer as everyone online is that",
+       ["the group is too small","marketing cannot be aimed at anyone specific","it costs more","it is not legal"],1)),
+   T("How online stores reach customers.",[
+     "Social media builds an audience over time at low cost but requires consistent posting.",
+     "Paid advertising reaches people quickly but stops producing results the moment payment stops.",
+     "Search visibility brings customers who are already looking for the product, which is why product titles and descriptions matter.",
+     "Referrals and reviews from existing customers cost nothing and convert better than any paid method."],
+     Q("The advantage of customers found through search is that they",
+       ["cost nothing to reach","are already looking for the product","buy in larger quantities","never return items"],1)),
+   T("Repeat customers.",[
+     "Acquiring a new customer costs more than selling again to an existing one.",
+     "A store with repeat customers needs less marketing spending to reach the same revenue.",
+     "Product quality, accurate descriptions, fast shipping, and responsive communication are what produce repeat customers.",
+     "This is why reviews function as an asset for an online business."],
+     Q("Repeat customers reduce a store's need for",["inventory","marketing spending","fixed costs","pricing"],1)),
+   S("Free or paid marketing?","Select the correct column for each method.",["Costs money directly","Costs time rather than money"],[
+     {t:"Running social media ads",b:0},
+     {t:"Posting regularly to social media",b:1},
+     {t:"Paying for a sponsored placement",b:0},
+     {t:"Asking satisfied customers for reviews",b:1},
+     {t:"Buying a mailing list",b:0},
+     {t:"Writing detailed product descriptions",b:1}])]},
+
+ {name:"Your Store",mins:8,blocks:[
+   function(b){return T("Customers at "+b.name+".",[
+     "Target customer: "+b.customers,
+     "This is who the marketing has to reach, and it is narrower than everyone online."])},
+   function(b){return T("Marketing costs money that comes out of profit.",[
+     b.owner+" is considering spending $60 a month on advertising.",
+     "That $60 becomes an additional fixed cost, which raises the break-even point.",
+     "The advertising is only worth it if it produces enough additional sales to more than cover itself."])},
+   function(b){return N("New monthly fixed costs at "+b.name+" if $60 of advertising is added:",b.f+60,
+     fm(b.f)+" plus $60.")},
+   function(b){return N("New break-even point with those higher fixed costs, rounded to two decimals:",
+     Math.round((b.f+60)/ppu(b)*100)/100,
+     fm(b.f+60)+" divided by profit per sale of "+fm(ppu(b))+".")},
+   function(b){return N("How many additional sales per month are needed just to pay for the advertising, rounded to two decimals?",
+     Math.round(60/ppu(b)*100)/100,
+     "$60 divided by profit per sale of "+fm(ppu(b))+".")},
+   function(b){return M("Make the decision.",[
+     Q("The advertising is worth the cost only if it produces more than",
+       [Math.round(60/ppu(b)*100)/100+" additional sales a month","60 additional sales a month","one additional sale a month","any additional revenue"],0),
+     Q("A cheaper way for "+b.name+" to reach customers would be",
+       ["asking satisfied customers for reviews and referrals","buying more advertising","raising the price","reducing product quality"],0)])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("An online store must market because",["it has no walk-in traffic","products cost more","shipping is required","payment fees exist"],0),
+     Q("A target customer should be defined",["as broadly as possible","specifically enough to aim marketing at","only by age","after the first year"],1),
+     Q("Advertising spending is",["a variable cost","an additional fixed cost","a startup cost only","not a cost"],1),
+     Q("Repeat customers are valuable because they",["pay higher prices","reduce the marketing needed for the same revenue","never return items","require no shipping"],1)])]}]},
+
+/* ============================ LESSON 7 ============================ */
+{n:7,title:"Building a Financial Projection",teks:"130.141(c)(5)(A)(D), (c)(1)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("Advertising spending is",["a variable cost","an additional fixed cost","revenue","a startup cost"],1),
+     Q("Monthly profit equals",["profit per sale times sales, minus fixed costs","revenue minus price","price times sales","fixed costs divided by sales"],0),
+     Q("Break-even equals",["fixed costs divided by profit per sale","price minus cost","revenue times margin","sales times price"],0)])]},
+
+ {name:"The Projection",mins:9,blocks:[
+   T("What a financial projection is.",[
+     "A financial projection is an estimate of what a business will earn and spend over a future period.",
+     "It is built from the same four figures used all unit: price, cost per sale, fixed costs, and expected sales.",
+     "It is an estimate, not a guarantee, and it is only as reliable as the sales assumption behind it."],
+     Q("A financial projection is",
+       ["a record of what already happened","an estimate of future earnings and spending","a legal requirement","a marketing document"],1)),
+   T("Why a projection is required.",[
+     "A lender reviewing a small business loan application asks for one.",
+     "An investor considering putting money into the business asks for one.",
+     "The owner needs one to decide whether the business is worth starting before spending anything.",
+     "A projection also identifies the month in which the business is expected to become profitable."],
+     Q("Before spending money to start a business, the owner uses a projection to determine",
+       ["how many competitors exist","whether the business is realistic","what to name the store","which platform to use"],1)),
+   T("The order of the calculation.",[
+     "First, estimate the number of sales for the period.",
+     "Second, multiply by price to get revenue.",
+     "Third, multiply sales by cost per sale to get total variable costs.",
+     "Fourth, add fixed costs for the period.",
+     "Fifth, subtract total costs from revenue to get projected profit."],
+     Q("In a projection, total variable cost is calculated as",
+       ["cost per sale times number of sales","fixed costs times sales","price times sales","revenue minus fixed costs"],0)),
+   T("Testing the assumption.",[
+     "The weakest part of any projection is the estimated number of sales.",
+     "A useful practice is to build three versions: a conservative case, an expected case, and an optimistic case.",
+     "If the business still works in the conservative case, the plan is sound. If it only works in the optimistic case, the plan carries significant risk."],
+     Q("Building a conservative version of a projection is useful because it shows whether",
+       ["the optimistic case is achievable","the business still works if sales are lower than hoped","costs can be eliminated","the price is too low"],1)),
+   N("A store expects 30 sales at $20 each. Projected revenue:",600,"20 times 30."),
+   N("Cost per sale is $12. Total variable cost for those 30 sales:",360,"12 times 30."),
+   N("Fixed costs are $100. Total cost for the month:",460,"360 plus 100."),
+   N("Projected profit for the month:",140,"600 minus 460.")]},
+
+ {name:"Your Store",mins:9,blocks:[
+   function(b){return T("A three month projection for "+b.name+".",[
+     "Price: "+fm(b.p)+". Cost per sale: "+fm(b.c)+". Fixed costs: "+fm(b.f)+" a month.",
+     "Build the projection using an expected volume of 20 sales a month.",
+     "Work through revenue, variable costs, fixed costs, and profit in order."])},
+   function(b){return N("Projected revenue for one month at 20 sales:",rev(b,20),fm(b.p)+" times 20.")},
+   function(b){return N("Total variable cost for those 20 sales:",r2(b.c*20),fm(b.c)+" times 20.")},
+   function(b){return N("Total cost for the month. Variable cost plus fixed costs of "+fm(b.f)+":",r2(b.c*20+b.f),
+     fm(r2(b.c*20))+" plus "+fm(b.f)+".")},
+   function(b){return N("Projected profit for the month:",profAt(b,20),
+     fm(rev(b,20))+" minus "+fm(r2(b.c*20+b.f))+".")},
+   function(b){return N("Projected profit for three months at that volume:",profAt(b,20)*3,
+     fm(profAt(b,20))+" times 3.")},
+   function(b){return T("A conservative case.",[
+     "Now test the plan at a lower volume of 10 sales a month.",
+     "This is the version a careful owner examines before committing money."])},
+   function(b){return N("Projected profit at 10 sales a month:",profAt(b,10),
+     fm(ppu(b))+" times 10, minus fixed costs of "+fm(b.f)+".")},
+   function(b){return M("Interpret the projection.",[
+     Q("At 10 sales a month, "+b.name+" is",
+       [profAt(b,10)>0?"still profitable":"operating at a loss",
+        profAt(b,10)>0?"operating at a loss":"still profitable",
+        "exactly at break-even","impossible to evaluate"],0),
+     Q("The least reliable figure in any projection is",
+       ["the price","the fixed costs","the estimated number of sales","the cost per sale"],2)])},
+   function(b){return R([
+     "PROJECTION",
+     "Store: "+b.name,
+     "Expected case, 20 sales: profit "+fm(profAt(b,20)),
+     "Conservative case, 10 sales: profit "+fm(profAt(b,10)),
+     "Break-even: "+be(b)+" sales a month"])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("A financial projection estimates",["past results","future earnings and spending","competitor pricing","customer opinions"],1),
+     Q("Total variable cost equals",["cost per sale times sales","fixed costs times sales","price times sales","revenue minus price"],0),
+     Q("The least reliable figure in a projection is",["the price","the estimated sales","the fixed costs","the cost per sale"],1),
+     Q("A conservative projection tests whether the business works if",["costs fall","sales are lower than hoped","the price rises","fixed costs disappear"],1)])]}]},
+
+/* ============================ LESSON 8 ============================ */
+{n:8,title:"Careers, Responsibility, and Store Check",teks:"130.141(c)(1), (c)(2)(B), (c)(5)",
+ secs:[
+ {name:"Start",mins:3,blocks:[
+   M("Warm-up.",[
+     Q("A financial projection is",["a record of the past","an estimate of the future","a marketing plan","a tax form"],1),
+     Q("Profit per sale equals",["price minus cost per sale","price plus cost","fixed costs divided by sales","revenue times margin"],0),
+     Q("Break-even equals",["fixed costs divided by profit per sale","price divided by cost","sales times price","revenue minus cost"],0)])]},
+
+ {name:"Careers and Responsibility",mins:8,blocks:[
+   T("Roles in online business.",[
+     "An e-commerce manager oversees a store's listings, pricing, inventory, and order flow.",
+     "A digital marketer runs advertising, email, and search strategy and is measured on whether sales increase.",
+     "A social media manager builds the audience and manages the brand's public communication.",
+     "Behind those roles are customer service representatives, fulfillment coordinators, web developers, and data analysts."],
+     Q("Which role is measured primarily on whether advertising increases sales?",
+       ["A fulfillment coordinator","A digital marketer","A web developer","A customer service representative"],1)),
+   T("Starting a business as a career path.",[
+     "Starting an online business is accessible, requiring far less capital than a physical storefront.",
+     "It is also crowded, and most small online stores never reach break-even, usually because the numbers were never calculated before starting.",
+     "The stores that last know their cost per sale, break-even point, and margin precisely.",
+     "Many owners operate a store alongside other employment, which is a legitimate outcome rather than a lesser one."]),
+   T("Legal and ethical responsibilities.",[
+     "Product descriptions and photographs must accurately represent what the customer will receive. Overstating what a product does is false advertising and is illegal.",
+     "Customer information including names, addresses, and payment details must be handled securely.",
+     "Posted return, refund, and shipping policies must be honored. Marketplaces suspend sellers who do not.",
+     "Businesses selling physical goods to Texas customers are required to collect and remit sales tax."],
+     Q("Using photographs that do not match the product actually shipped is",
+       ["standard marketing practice","false advertising and illegal","required by marketplaces","acceptable for small sellers"],1)),
+   T("Why reputation is the asset.",[
+     "An online store has no location, no signage, and no personal relationship built through walk-in traffic.",
+     "Reviews and ratings are what a new customer uses to decide whether to trust the store.",
+     "A single month of dishonest practice can end a store that took years to build.",
+     "This is why ethical operation is a business decision as much as a moral one."],
+     Q("Reviews function as an asset for an online store because they",
+       ["reduce shipping costs","are what new customers use to decide whether to trust the store","eliminate fixed costs","increase the profit margin"],1)),
+   S("Which role handles it?","Select the correct column for each task.",["Marketing","Operations and fulfillment"],[
+     {t:"Running ads to attract new customers",b:0},
+     {t:"Packing and shipping orders on time",b:1},
+     {t:"Writing an email announcing a sale",b:0},
+     {t:"Tracking inventory so nothing oversells",b:1}])]},
+
+ {name:"Store Check",mins:12,blocks:[
+   T("Store Check 1.",[
+     "Ten questions covering Unit 1, using the figures from your store."]),
+   function(b){return M("Your store.",[
+     Q("Profit per sale at "+b.name+" is",[fm(ppu(b)),fm(b.p),fm(b.c),fm(b.f)],0),
+     Q("Which of these is a fixed cost at "+b.name+"?",
+       ["The "+fm(b.f)+" charged monthly","The "+fm(b.c)+" cost of one sale","The "+fm(b.p)+" price","The profit per sale"],0)])},
+   function(b){return N("Revenue from 20 sales:",rev(b,20),fm(b.p)+" times 20.")},
+   function(b){return N("Break-even sales:",be(b),fm(b.f)+" divided by "+fm(ppu(b))+".")},
+   function(b){return N("Profit in a 20 sale month:",profAt(b,20),
+     fm(ppu(b))+" times 20 is "+fm(ppu(b)*20)+", minus "+fm(b.f)+".")},
+   function(b){return N("Profit in a 40 sale month:",profAt(b,40),
+     "Same fixed costs of "+fm(b.f)+", double the sales.")},
+   function(b){return N("Total variable cost for 20 sales:",r2(b.c*20),fm(b.c)+" times 20.")},
+   M("Final questions.",[
+     Q("A month with zero sales results in a loss equal to",["nothing","the fixed costs","the price","total revenue"],1),
+     Q("Revenue is",["all money received before costs","what remains after costs","the same as profit","a fixed cost"],0)]),
+   STAMP("OPEN FOR BUSINESS"),
+   function(b){return R([
+     "UNIT 1 SUMMARY",
+     "Store: "+b.name,
+     "Price: "+fm(b.p)+"   Cost per sale: "+fm(b.c),
+     "Profit per sale: "+fm(ppu(b))+"   Margin: "+marg(b)+" percent",
+     "Fixed costs: "+fm(b.f)+"   Break-even: "+be(b)+" sales",
+     "Store Check 1 score: ____"])}]},
+
+ {name:"Exit",mins:3,blocks:[
+   M("Exit.",[
+     Q("A digital marketer is measured on",["order accuracy","whether sales increase","website uptime","inventory counts"],1),
+     Q("Most small online stores fail because",["shipping is too expensive","the numbers were never calculated before starting","marketplaces are unfair","customers do not shop online"],1),
+     Q("Product photographs that do not match what ships are",["standard practice","false advertising","required by law","acceptable at small scale"],1),
+     Q("Businesses selling physical goods to Texas customers must",["avoid marketplaces","collect and remit sales tax","register in every state","charge shipping separately"],1)])]}]}
+];
+
+/* ================= LESSONS MAP ================= */
+var DAYS=[
+{n:1,title:"What a Virtual Business Is",teks:"130.141(c)(2)(A)(B)",parts:[0]},
+{n:2,title:"Price, Cost, and Profit",teks:"130.141(c)(4)(C), (c)(5)(D)",parts:[1]},
+{n:3,title:"Fixed and Variable Costs",teks:"130.141(c)(5)(A)(D)",parts:[2]},
+{n:4,title:"Break-Even",teks:"130.141(c)(4)(C), (c)(5)(A)",parts:[3]},
+{n:5,title:"Revenue, Margin, and Growth",teks:"130.141(c)(4)(C), (c)(5)(A)(D)",parts:[4]},
+{n:6,title:"Finding and Keeping Customers",teks:"130.141(c)(2)(B), (c)(4)(C)",parts:[5]},
+{n:7,title:"Building a Financial Projection",teks:"130.141(c)(5)(A)(D), (c)(1)",parts:[6]},
+{n:8,title:"Careers, Responsibility, and Store Check",teks:"130.141(c)(1), (c)(2)(B), (c)(5)",parts:[7]}
+];
+
+/* ================= ENGINE ================= */
+function lsGet(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var KP=COURSE.key;
+var state={biz:lsGet(KP+"biz")||"",groups:lsGet(KP+"groups")||{},done:lsGet(KP+"done")||{}};
+var cur={li:-1,sec:0,blk:0,secNode:null,q:0,first:0,warn:false};
+
+function scrollTo_(n){try{if(n&&n.scrollIntoView)n.scrollIntoView({behavior:"smooth",block:"center"})}catch(e){}}
+function curBiz(){for(var i=0;i<BIZ.length;i++){if(BIZ[i].id===state.biz)return BIZ[i]}return null}
+function go(h){if(location.hash===h){route()}else{location.hash=h}}
+function el(tag,cls,html){var d=document.createElement(tag);if(cls)d.className=cls;if(html!==undefined)d.innerHTML=html;return d}
+function shuf(a){var c=a.slice();for(var i=c.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=c[i];c[i]=c[j];c[j]=t}return c}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function pad2(n){return (n<10?"0":"")+n}
+function mono(name){var w=name.split(" ");var a=w[0]?w[0][0]:"B";var b=w[1]?w[1][0]:"";return (a+b).toUpperCase()}
+function today(){return new Date().toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})}
+
+function setBiz(id){state.biz=id;lsSet(KP+"biz",id);fillBizSel();
+  if(cur.warn){var w=document.getElementById("warnpick");if(w)w.remove();cur.warn=false;if(curBiz()){showBlock()}}}
+function fillBizSel(){}
+
+/* ---------- router ---------- */
+function route(){
+  var h=location.hash||"#/";
+  var v=document.getElementById("view");v.innerHTML="";
+  if(h.indexOf("#/day/")===0){var n=parseInt(h.slice(6),10);if(n>=1&&n<=DAYS.length){renderLesson(n-1);return}}
+  if(h==="#/teacher"){renderTeacher();return}
+  renderHome();
+}
+
+/* ---------- home ---------- */
+function renderHome(){
+  var v=document.getElementById("view");
+  var hero=el("section","hero");
+  hero.appendChild(el("div","eyebrow",COURSE.heroEyebrow));
+  hero.appendChild(el("h1","",COURSE.heroTitle));
+  hero.appendChild(el("p","",COURSE.heroTag));
+  var cta=el("div","cta");
+  var b1=el("button","btn green",COURSE.startLabel);b1.onclick=function(){go("#/day/1")};
+  cta.appendChild(b1);hero.appendChild(cta);v.appendChild(hero);
+  var ul=el("div","unitlabel");
+  ul.appendChild(el("h2","",COURSE.unitTitle));
+  ul.appendChild(el("span","",COURSE.unitMeta));
+  v.appendChild(ul);
+  var lg=el("div","ledger");
+  DAYS.forEach(function(D,i){
+    var r=el("div","lrow"+(state.done[i]?" done":""));
+    r.setAttribute("role","button");r.tabIndex=0;
+    var left=el("div","dnum","LESSON "+pad2(D.n));
+    var mid=el("div","");
+    mid.appendChild(el("div","dtitle",esc(D.title)));
+    mid.appendChild(el("div","dsub","TEKS "+esc(D.teks)));
+    var st=state.done[i]?("&#10003; "+state.done[i].f+"/"+state.done[i].q):"OPEN";
+    var right=el("div","dstat",st);
+    r.appendChild(left);r.appendChild(mid);r.appendChild(right);
+    r.onclick=function(){go("#/day/"+D.n)};
+    r.onkeydown=function(e){if(e.key==="Enter")go("#/day/"+D.n)};
+    lg.appendChild(r);
+  });
+  if(COURSE.nextUnit){
+    var lock=el("div","lrow lockedrow");
+    lock.appendChild(el("div","dnum",COURSE.nextUnit.num));
+    var lm=el("div","");lm.appendChild(el("div","dtitle",COURSE.nextUnit.t));
+    lm.appendChild(el("div","dsub",COURSE.nextUnit.sub));
+    lock.appendChild(lm);lock.appendChild(el("div","dstat",""));
+    lg.appendChild(lock);
+  }
+  v.appendChild(lg);
+  addFooter(v);
+}
+
+function addFooter(v){
+  var f=el("div","footer");
+  f.appendChild(el("span","",COURSE.footer));
+  var right=el("span","");
+  var rs=el("button","","Reset progress");
+  rs.onclick=function(){if(confirm("Erase all saved progress on this device?")){state.done={};lsSet(KP+"done",state.done);route()}};
+  right.appendChild(rs);
+  f.appendChild(right);v.appendChild(f);
+}
+
+/* ---------- businesses + draw ---------- */
+
+/* ---------- lesson flow ---------- */
+function daySecs(D){
+  var out=[];
+  D.parts.forEach(function(pi,idx){
+    LESSONS[pi].secs.forEach(function(s){
+      if(idx>0&&s.name==="Warm-Up")return;
+      if(idx<D.parts.length-1&&s.name==="Exit")return;
+      out.push(s);
+    });
+  });
+  return out;
+}
+function renderLesson(li){
+  var D=DAYS[li];
+  cur={li:li,sec:0,blk:0,secNode:null,q:0,first:0,warn:false,secs:daySecs(D)};
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow",COURSE.dayEyebrow+" &middot; LESSON "+pad2(D.n)));
+  hd.appendChild(el("h1","",esc(D.title)));
+  hd.appendChild(el("span","teks","TEKS "+esc(D.teks)));
+  var steps=el("div","steps");steps.id="stepdots";
+  cur.secs.forEach(function(s,i){steps.appendChild(el("span","stepdot"+(i===0?" now":""),esc(s.name.toUpperCase())))});
+  hd.appendChild(steps);
+  v.appendChild(hd);
+  var body=el("div","");body.id="lbody";v.appendChild(body);
+  startSection();
+}
+function updateDots(){
+  var dots=document.getElementById("stepdots");if(!dots)return;
+  dots.innerHTML="";
+  cur.secs.forEach(function(s,i){
+    var cls="stepdot"+(i<cur.sec?" past":(i===cur.sec?" now":""));
+    dots.appendChild(el("span",cls,esc(s.name.toUpperCase())));
+  });
+}
+function startSection(){
+  var s=cur.secs[cur.sec];
+  var body=document.getElementById("lbody");
+  var bar=el("div","secbar");
+  bar.appendChild(el("h2","",esc(s.name)));
+  body.appendChild(bar);
+  cur.secNode=el("div","");body.appendChild(cur.secNode);
+  updateDots();
+  showBlock();
+}
+function showBlock(){
+  var s=cur.secs[cur.sec];
+  var bl=s.blocks[cur.blk];
+  if(typeof bl==="function"){
+    var b=curBiz();
+    if(!b){
+      var note=el("div","card");
+      note.appendChild(el("h3","","Choose your business"));
+      note.appendChild(el("p","","The rest of this lesson uses the records of the business you are running. Choose one to continue. If you already chose one on another device, select it again here."));
+      cur.secNode.appendChild(note);
+      var pk=rPick({t:"pick"});
+      pk.id="warnpick";
+      cur.secNode.appendChild(pk);
+      cur.warn=true;
+      scrollTo_(note);return;
+    }
+    bl=bl(b);
+  }
+  var node=renderBlock(bl);
+  cur.secNode.appendChild(node);
+  scrollTo_(node);
+}
+function blockDone(){
+  var s=cur.secs[cur.sec];
+  cur.blk++;
+  if(cur.blk<s.blocks.length){showBlock();return}
+  cur.sec++;cur.blk=0;
+  if(cur.sec<cur.secs.length){startSection();return}
+  finishLesson();
+}
+function vcode(s){var h=5381;for(var i=0;i<s.length;i++){h=((h*33)^s.charCodeAt(i))>>>0}return ("0000"+h.toString(36).toUpperCase()).slice(-4)}
+function finishLesson(){
+  var D=DAYS[cur.li];
+  updateDots();
+  state.done[cur.li]={f:cur.first,q:cur.q,when:Date.now()};
+  lsSet(KP+"done",state.done);
+  var body=document.getElementById("lbody");
+  var r=el("div","result");
+  r.appendChild(el("div","sub","LESSON "+pad2(D.n)+" COMPLETE"));
+  r.appendChild(el("div","bignum",cur.first+" / "+cur.q));
+  r.appendChild(el("div","sub","SCORE"));
+  var b=curBiz();
+  r.appendChild(el("div","bizline",(b?esc(b.name)+" &middot; ":"")+today()));
+  var form=el("div","resultform");
+  var lab=el("label","","YOUR NAME");lab.htmlFor="rname";
+  var nameIn=el("input","namein");nameIn.id="rname";nameIn.type="text";nameIn.placeholder="First and last name";
+  var ta=el("textarea","copyta");ta.rows=7;ta.readOnly=true;
+  function block(){
+    var nm=nameIn.value.trim();
+    var sc=cur.first+"/"+cur.q;
+    var dt=today();
+    var ent=b?b.name:"none selected";
+    var code=vcode("GHS26|"+D.n+"|"+sc+"|"+dt+"|"+ent+"|"+nm.toLowerCase());
+    return COURSE.brand+" RESULT\nDay "+D.n+": "+D.title+"\nName: "+(nm||"____________")+"\n"+COURSE.entWord+": "+ent+"\nScore: "+sc+"\nDate: "+dt+"\nCode: "+code;
+  }
+  function refresh(){ta.value=block()}
+  nameIn.addEventListener("input",refresh);
+  refresh();
+  var fb=el("div","fb","");fb.style.marginTop="8px";
+  var copy=el("button","btn green","Copy for Canvas");copy.style.marginTop="12px";
+  copy.onclick=function(){
+    if(!nameIn.value.trim()){fb.className="fb no";fb.style.color="#F2B8AF";fb.textContent="Type your name first.";nameIn.focus();return}
+    refresh();
+    function okmsg(){fb.className="fb ok";fb.style.color="#9FD8B4";fb.textContent="Copied. Paste it into today's Canvas assignment."}
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ta.value).then(okmsg,function(){ta.select();try{document.execCommand("copy")}catch(e){}okmsg()});
+    }else{ta.select();try{document.execCommand("copy")}catch(e){}okmsg()}
+  };
+  form.appendChild(lab);form.appendChild(nameIn);form.appendChild(ta);form.appendChild(copy);form.appendChild(fb);
+  r.appendChild(form);
+  r.appendChild(el("div","tnote",COURSE.resultNote));
+  var back=el("button","btn ghost","Back to Lessons");back.style.marginTop="10px";back.style.color="#fff";back.style.borderColor="#fff";
+  back.onclick=function(){go("#/")};
+  r.appendChild(back);
+  body.appendChild(r);
+  scrollTo_(r);
+}
+function scoreQ(firstTry){cur.q++;if(firstTry)cur.first++}
+
+/* ---------- block renderers ---------- */
+function renderBlock(bl){
+  if(bl.t==="teach")return rTeach(bl);
+  if(bl.t==="note")return rNote(bl);
+  if(bl.t==="mcq")return rMcq(bl);
+  if(bl.t==="sort")return rSort(bl);
+  if(bl.t==="num")return rNum(bl);
+  if(bl.t==="tx")return rTx(bl);
+  if(bl.t==="record")return rRecord(bl);
+  if(bl.t==="stamp")return rStamp(bl);
+  if(bl.t==="pick")return rPick(bl);
+  return el("div","","");
+}
+function contBtn(label){var b=el("button","btn","Continue");if(label)b.textContent=label;b.onclick=function(){b.disabled=true;blockDone()};return b}
+
+function rPick(bl){
+  var c=el("div","card pickcard");
+  var body=el("div","");c.appendChild(body);
+  function grid(){
+    body.innerHTML="";
+    body.appendChild(el("h3","","Choose a business"));
+    body.appendChild(el("p","tnote","Review each one, then select the business you want to run."));
+    var g=el("div","picklist");
+    BIZ.forEach(function(b){
+      var row=el("div","pickrow2");
+      var m=el("div","mchip",mono(b.name));m.style.background="hsl("+b.hue+",45%,34%)";
+      var mid=el("div","");
+      mid.appendChild(el("div","pname",esc(b.name)));
+      mid.appendChild(el("div","pdoes",esc(b.does)));
+      mid.appendChild(el("div","pprice",esc(b.price)));
+      var btn=el("button","btn ghost sm","View");
+      btn.onclick=function(){detail(b)};
+      row.appendChild(m);row.appendChild(mid);row.appendChild(btn);
+      g.appendChild(row);
+    });
+    body.appendChild(g);
+  }
+  function detail(b){
+    body.innerHTML="";
+    var m=el("div","mchip",mono(b.name));m.style.background="hsl("+b.hue+",45%,34%)";
+    body.appendChild(m);
+    body.appendChild(el("h3","",esc(b.name)));
+    if(b.owner)body.appendChild(el("div","who",(COURSE.ownerLabel||"Owner")+": "+esc(b.owner)));
+    body.appendChild(el("div","pprice",esc(b.price)));
+    var st=el("div","story");
+    b.story.forEach(function(line){st.appendChild(el("p","",esc(line)))});
+    body.appendChild(st);
+    var oh=el("div","opsblock");
+    oh.appendChild(el("div","olabel","CUSTOMERS"));
+    oh.appendChild(el("p","",esc(b.customers)));
+    oh.appendChild(el("div","olabel","OPERATIONS"));
+    b.ops.forEach(function(line){oh.appendChild(el("p","",esc(line)))});
+    if(COURSE.pickSummary){
+      oh.appendChild(el("div","olabel",COURSE.pickSummaryLabel||"NUMBERS"));
+      oh.appendChild(el("p","",COURSE.pickSummary(b)));
+    }
+    body.appendChild(oh);
+    var row=el("div","btnrow");
+    var back=el("button","btn ghost","Back");
+    back.onclick=function(){grid();scrollTo_(c)};
+    var sel=el("button","btn green","Select this business");
+    sel.onclick=function(){choose(b)};
+    row.appendChild(back);row.appendChild(sel);
+    body.appendChild(row);
+    scrollTo_(c);
+  }
+  function choose(b){
+    setBiz(b.id);
+    body.innerHTML="";
+    body.appendChild(el("h3","","You are running "+esc(b.name)));
+    body.appendChild(el("p","","Owner: "+esc(b.owner)+". "+esc(b.does)));
+    body.appendChild(el("p","tnote","You will keep the records for this business for the rest of this unit."));
+    var row=el("div","btnrow");
+    var chg=el("button","btn ghost","Choose a different business");
+    chg.onclick=function(){grid();scrollTo_(c)};
+    var go=el("button","btn","Continue");
+    go.onclick=function(){
+      go.disabled=true;
+      if(c.id==="warnpick"){cur.warn=false;c.id="";showBlock()}
+      else{blockDone()}
+    };
+    row.appendChild(go);row.appendChild(chg);
+    body.appendChild(row);
+    scrollTo_(c);
+  }
+  grid();
+  return c;
+}
+function rNote(bl){
+  var c=el("div","card");
+  c.appendChild(el("p","big",esc(bl.txt)));
+  var row=el("div","btnrow");row.appendChild(contBtn());c.appendChild(row);
+  return c;
+}
+function rTeach(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.h)));
+  var ul=el("ul","klist");
+  bl.lines.forEach(function(x){ul.appendChild(el("li","",esc(x)))});
+  c.appendChild(ul);
+  var row=el("div","btnrow");
+  var nx=contBtn("Next");
+  if(bl.check){
+    nx.disabled=true;
+    c.appendChild(qNode(bl.check,function(){nx.disabled=false}));
+  }
+  row.appendChild(nx);c.appendChild(row);
+  return c;
+}
+function qNode(q,onDone){
+  var wrap=el("div","");
+  wrap.appendChild(el("div","q",esc(q.q)));
+  var opts=el("div","opts");
+  var attempts=0,settled=false,picked=null,pickedBtn=null;
+  var options=shuf(q.o.map(function(t,i){return {t:t,ok:i===q.a}}));
+  var fb=el("div","fb");
+  var sub=el("button","btn green sm","Submit");
+  sub.disabled=true;
+  var subrow=el("div","subrow");subrow.appendChild(sub);
+  options.forEach(function(o){
+    var b=el("button","opt",esc(o.t));
+    b.onclick=function(){
+      if(settled||b.disabled)return;
+      Array.prototype.forEach.call(opts.children,function(x){x.classList.remove("chosen")});
+      b.classList.add("chosen");
+      picked=o;pickedBtn=b;
+      sub.disabled=false;
+      fb.className="fb";fb.textContent="";
+    };
+    opts.appendChild(b);
+  });
+  sub.onclick=function(){
+    if(settled||!picked)return;
+    attempts++;
+    if(picked.ok){
+      settled=true;
+      pickedBtn.classList.remove("chosen");pickedBtn.classList.add("right");
+      fb.className="fb ok";fb.textContent="Correct.";
+      scoreQ(attempts===1);
+      Array.prototype.forEach.call(opts.children,function(x){x.disabled=true});
+      sub.disabled=true;sub.style.display="none";
+      onDone();
+    }else{
+      pickedBtn.classList.remove("chosen");pickedBtn.classList.add("wrong");
+      pickedBtn.disabled=true;
+      picked=null;pickedBtn=null;sub.disabled=true;
+      if(attempts===1){
+        fb.className="fb no";fb.textContent="Incorrect. Select another answer and submit again.";
+        if(q.why)wrap.insertBefore(el("div","hint",esc(q.why)),fb);
+      }else{
+        settled=true;
+        options.forEach(function(oo,ii){if(oo.ok)opts.children[ii].classList.add("right")});
+        Array.prototype.forEach.call(opts.children,function(x){x.disabled=true});
+        fb.className="fb no";fb.textContent="Incorrect. The correct answer is shown above.";
+        sub.style.display="none";
+        scoreQ(false);
+        onDone();
+      }
+    }
+  };
+  wrap.appendChild(opts);wrap.appendChild(subrow);wrap.appendChild(fb);
+  return wrap;
+}
+function rMcq(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  var done=0;var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;
+  bl.qs.forEach(function(q){
+    c.appendChild(qNode(q,function(){done++;if(done===bl.qs.length)nx.disabled=false}));
+  });
+  row.appendChild(nx);c.appendChild(row);
+  return c;
+}
+function rSort(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  c.appendChild(el("p","",esc(bl.prompt)));
+  var items=shuf(bl.items);
+  var idx=0,streak=0,first=0;
+  var stage=el("div","sortnow");
+  var buckets=el("div","buckets");
+  var lists=[];
+  bl.buckets.forEach(function(bn){
+    var bu=el("div","bucket");bu.appendChild(el("h4","",esc(bn.toUpperCase())));
+    var pl=el("div","placed");bu.appendChild(pl);lists.push(pl);buckets.appendChild(bu);
+  });
+  var scoreLine=el("div","score","");
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);
+  function paint(){
+    if(idx>=items.length){
+      stage.innerHTML='<div class="item">Done.</div><div class="val">'+first+" of "+items.length+" correct.</div>";
+      nx.disabled=false;scoreLine.textContent="";return;
+    }
+    var it=items[idx];
+    stage.innerHTML='<div class="item">'+esc(it.t)+'</div>'+(it.v!==undefined?'<div class="val">'+fm(it.v)+"</div>":"");
+    var bb=el("div","bucketbtns");
+    bl.buckets.forEach(function(bn,bi){
+      var b=el("button","btn ghost sm",esc(bn));
+      b.onclick=function(){
+        var ok=(bi===it.b);
+        scoreQ(ok);
+        if(ok){first++;streak++;
+          var tag=el("span","ok",esc(it.t));lists[it.b].appendChild(tag);
+        }else{streak=0;
+          var tag2=el("span","no",esc(it.t));lists[it.b].appendChild(tag2);
+        }
+        scoreLine.innerHTML="SCORE "+first+"/"+items.length+(streak>1?' &middot; <span class="streak">STREAK &times;'+streak+"</span>":"");
+        idx++;paint();
+      };
+      bb.appendChild(b);
+    });
+    stage.appendChild(bb);
+  }
+  c.appendChild(stage);c.appendChild(buckets);c.appendChild(scoreLine);c.appendChild(row);
+  paint();
+  return c;
+}
+function rNum(bl){
+  var c=el("div","card");
+  c.appendChild(el("div","q",esc(bl.prompt)));
+  var nr=el("div","numrow");
+  nr.appendChild(el("span","dollar","$"));
+  var inp=el("input","numin");inp.type="text";inp.inputMode="numeric";inp.placeholder="0";
+  nr.appendChild(inp);
+  var ck=el("button","btn sm","Check");nr.appendChild(ck);
+  c.appendChild(nr);
+  var fb=el("div","fb");c.appendChild(fb);
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);c.appendChild(row);
+  var attempts=0,settled=false;
+  function submit(){
+    if(settled)return;
+    var raw=inp.value.replace(/[$,\s]/g,"");
+    if(raw==="")return;
+    var vnum=Number(raw);
+    attempts++;
+    if(Math.abs(vnum-bl.ans)<0.005){
+      settled=true;fb.className="fb ok";
+      fb.textContent="Correct.";
+      scoreQ(attempts===1);inp.disabled=true;ck.disabled=true;nx.disabled=false;
+    }else{
+      fb.className="fb no";fb.textContent="Not it. Check the math and try again.";
+      if(attempts===2&&bl.why){c.insertBefore(el("div","hint",esc(bl.why)),row)}
+      if(attempts>=3){
+        settled=true;fb.className="fb no";
+        fb.textContent="The answer is "+fm(bl.ans)+". "+(bl.why||"");
+        scoreQ(false);inp.disabled=true;ck.disabled=true;nx.disabled=false;
+      }
+    }
+  }
+  ck.onclick=submit;
+  inp.addEventListener("keydown",function(e){if(e.key==="Enter")submit()});
+  return c;
+}
+function rTx(bl){
+  var c=el("div","card");
+  c.appendChild(el("h3","",esc(bl.title)));
+  if(bl.note)c.appendChild(el("p","tnote",esc(bl.note)));
+  var doneCount=0;
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);
+  bl.txs.forEach(function(tx){
+    c.appendChild(txCard(tx,function(){doneCount++;if(doneCount===bl.txs.length)nx.disabled=false}));
+  });
+  c.appendChild(row);
+  return c;
+}
+function txCard(tx,onDone){
+  var cap=tx.cap||"Owner, Capital";
+  var ACC=["Cash","Supplies","Equipment","Accounts Payable",cap];
+  var card=el("div","txcard");
+  card.appendChild(el("div","txd",esc(tx.d)));
+  var sel={up:{},dn:{}};
+  var attempts=0,settled=false;
+  function chipRow(label,key){
+    var pr=el("div","pickrow");
+    pr.appendChild(el("h5","",label));
+    var ch=el("div","acctchips");
+    ACC.forEach(function(a){
+      var b=el("button","acct",esc(a));
+      b.onclick=function(){
+        if(settled)return;
+        sel[key][a]=!sel[key][a];
+        if(sel[key][a]){b.classList.add(key==="up"?"selup":"seldn");sel[key]["__none__"]=false;
+          var nb=ch.querySelector(".none");if(nb)nb.classList.remove(key==="up"?"selup":"seldn");}
+        else{b.classList.remove("selup","seldn")}
+      };
+      ch.appendChild(b);
+    });
+    var nb=el("button","acct none","Nothing");
+    nb.onclick=function(){
+      if(settled)return;
+      var on=!sel[key]["__none__"];
+      ACC.forEach(function(a){sel[key][a]=false});
+      Array.prototype.forEach.call(ch.children,function(x){x.classList.remove("selup","seldn")});
+      sel[key]["__none__"]=on;
+      if(on)nb.classList.add(key==="up"?"selup":"seldn");
+    };
+    ch.appendChild(nb);
+    pr.appendChild(ch);
+    return pr;
+  }
+  var upRow=chipRow("WHAT GOES UP","up");
+  var dnRow=chipRow("WHAT GOES DOWN","dn");
+  card.appendChild(upRow);card.appendChild(dnRow);
+  var fb=el("div","fb");card.appendChild(fb);
+  var ck=el("button","btn sm","Check this one");ck.style.marginTop="12px";
+  card.appendChild(ck);
+  function picked(key){return ACC.filter(function(a){return sel[key][a]})}
+  function rowOK(key,ans){
+    var p=picked(key);
+    if(ans.length===0){return p.length===0&&sel[key]["__none__"]===true}
+    if(p.length!==ans.length)return false;
+    for(var i=0;i<ans.length;i++){if(p.indexOf(ans[i])<0)return false}
+    return true;
+  }
+  function reveal(){
+    ACC.forEach(function(a){sel.up[a]=tx.up.indexOf(a)>=0;sel.dn[a]=tx.down.indexOf(a)>=0});
+    sel.up["__none__"]=tx.up.length===0;sel.dn["__none__"]=tx.down.length===0;
+    [upRow,dnRow].forEach(function(rw,ri){
+      var key=ri===0?"up":"dn";var ans=ri===0?tx.up:tx.down;
+      Array.prototype.forEach.call(rw.querySelectorAll(".acct"),function(b){
+        b.classList.remove("selup","seldn");
+        var isNone=b.classList.contains("none");
+        var on=isNone?(ans.length===0):(ans.indexOf(b.textContent)>=0);
+        if(on)b.classList.add(key==="up"?"selup":"seldn");
+      });
+    });
+  }
+  ck.onclick=function(){
+    if(settled)return;
+    var upEmptyPick=picked("up").length===0&&!sel.up["__none__"];
+    var dnEmptyPick=picked("dn").length===0&&!sel.dn["__none__"];
+    if(upEmptyPick||dnEmptyPick){fb.className="fb no";fb.textContent="Make a pick in both rows. Tap Nothing if nothing moves.";return}
+    attempts++;
+    var u=rowOK("up",tx.up),d=rowOK("dn",tx.down);
+    if(u&&d){
+      settled=true;fb.className="fb ok";
+      fb.textContent="Correct.";
+      scoreQ(attempts===1);ck.disabled=true;onDone();
+    }else{
+      fb.className="fb no";
+      fb.textContent=!u&&!d?"Look again at both rows.":(!u?"Look again at what goes up.":"Look again at what goes down.");
+      if(attempts>=3){
+        settled=true;reveal();
+        fb.className="fb no";fb.textContent="Here is the correct move. Study it before you continue.";
+        scoreQ(false);ck.disabled=true;onDone();
+      }
+    }
+  };
+  return card;
+}
+function rRecord(bl){
+  var c=el("div","record");
+  c.appendChild(el("h4","","RECORD THIS IN YOUR BOOKS"));
+  bl.lines.forEach(function(x){c.appendChild(el("div","rline",esc(x)))});
+  var b=el("button","btn green sm","Recorded in our Books");b.style.marginTop="10px";
+  b.onclick=function(){b.disabled=true;b.textContent="In the Books";blockDone()};
+  c.appendChild(b);
+  return c;
+}
+function rStamp(bl){
+  var c=el("div","card");
+  var w=el("div","stampwrap");
+  var s=el("div","stamp",esc(bl.label));
+  w.appendChild(s);c.appendChild(w);
+  var row=el("div","btnrow");var nx=contBtn();nx.disabled=true;row.appendChild(nx);c.appendChild(row);
+  setTimeout(function(){s.classList.add("show")},60);
+  setTimeout(function(){nx.disabled=false},700);
+  return c;
+}
+
+/* ---------- teacher ---------- */
+function renderTeacher(){
+  var v=document.getElementById("view");
+  var hd=el("section","lhead");
+  hd.appendChild(el("div","eyebrow","FOR THE TEACHER"));
+  hd.appendChild(el("h1","","Run of Show"));
+  v.appendChild(hd);
+  COURSE.teacher.forEach(function(card){
+    var c=el("div","card");
+    c.appendChild(el("h3","",card.h));
+    card.ps.forEach(function(p){c.appendChild(el("p","",p))});
+    v.appendChild(c);
+  });
+  var c3=el("div","card");
+  c3.appendChild(el("h3","",COURSE.mapTitle));
+  DAYS.forEach(function(D){
+    c3.appendChild(el("p","","Lesson "+D.n+" &middot; "+esc(D.title)+" &middot; TEKS "+esc(D.teks)));
+  });
+  v.appendChild(c3);
+  addFooter(v);
+}
+
+/* ---------- boot ---------- */
+fillBizSel();
+
+window.addEventListener("hashchange",route);
+route();
+</script>
+</body>
+</html>
